@@ -69,8 +69,9 @@ class retinal_image:
     def load_red_intensity(self):
         self.red_intensity = compute_red_intensity(self)  
         
-image = retinal_image(retinal_im_list[1], 'train')
+image = retinal_image(retinal_im_list[11], 'train')
 io.imshow(image.vessels)
+plt.show() 
 
 
 from skimage.feature import hog
@@ -81,10 +82,8 @@ from skimage import data
 import matplotlib.pyplot as plt
 from skimage.util import invert
 
-# Invert the horse image
-#image = invert(image.vessels)
-
 image=image.vessels
+import scipy.ndimage as ndimage
 
 # perform skeletonization
 skeleton = skeletonize(image)
@@ -108,6 +107,7 @@ fig.tight_layout()
 plt.show()
 
 from scipy.ndimage import binary_hit_or_miss
+
 
 B1 = np.array([[0, 1, 0], 
                    [1, 1, 1], 
@@ -158,25 +158,25 @@ B13=np.array([[1, 0, 0],
                  [0, 1, 1], 
                  [1, 0, 0]])
 
-B14=np.array([[1, 0, 0], 
-                 [0, 1, 1], 
-                 [1, 0, 0]])
-
-B15=np.array([[0, 0, 1], 
+B14=np.array([[0, 0, 1], 
                  [1, 1, 0], 
                  [0, 1, 0]])
 
-B16=np.array([[0, 1, 0], 
+B15=np.array([[0, 1, 0], 
                  [0, 1, 0], 
                  [1, 0, 1]])
-    
+B16=np.rot90(B14)
+B17 = np.rot90(B15)
+B18 = np.rot90(B16)
 
-IMhit_mis=(binary_hit_or_miss(skeleton,B1)+binary_hit_or_miss(skeleton,B2)+binary_hit_or_miss(skeleton,B3)+binary_hit_or_miss(skeleton,B4)+binary_hit_or_miss(skeleton,B5)+binary_hit_or_miss(skeleton,B6)+binary_hit_or_miss(skeleton,B7)+binary_hit_or_miss(skeleton,B8)+binary_hit_or_miss(skeleton,B9)+binary_hit_or_miss(skeleton,B10)+binary_hit_or_miss(skeleton,B11)+binary_hit_or_miss(skeleton,B12)+binary_hit_or_miss(skeleton,B13)+binary_hit_or_miss(skeleton,B14)+binary_hit_or_miss(skeleton,B15)+binary_hit_or_miss(skeleton,B16))
+IMhit_mis=(binary_hit_or_miss(skeleton,B1)+binary_hit_or_miss(skeleton,B2)+binary_hit_or_miss(skeleton,B3)+binary_hit_or_miss(skeleton,B4)+binary_hit_or_miss(skeleton,B5)+binary_hit_or_miss(skeleton,B6)+binary_hit_or_miss(skeleton,B7)+binary_hit_or_miss(skeleton,B8)+binary_hit_or_miss(skeleton,B9)+binary_hit_or_miss(skeleton,B10)+binary_hit_or_miss(skeleton,B11)+binary_hit_or_miss(skeleton,B12)+binary_hit_or_miss(skeleton,B13)+binary_hit_or_miss(skeleton,B14)+binary_hit_or_miss(skeleton,B15)+binary_hit_or_miss(skeleton,B16)+binary_hit_or_miss(skeleton,B17)+binary_hit_or_miss(skeleton,B18))
 
 IMhit_mis_bin=IMhit_mis.astype(np.int); 
 coordinates=np.nonzero(IMhit_mis_bin)
 
 coordinates=np.nonzero(IMhit_mis_bin)
+
+plt.figure(3)
 
 plt.imshow(skeleton)
 plt.scatter(x=coordinates[1],y=coordinates[0],c='r',s=20,marker='x')
