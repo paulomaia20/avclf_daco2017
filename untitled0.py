@@ -69,7 +69,7 @@ class retinal_image:
     def load_red_intensity(self):
         self.red_intensity = compute_red_intensity(self)  
         
-image = retinal_image(retinal_im_list[11], 'train')
+image = retinal_image(retinal_im_list[15], 'train')
 io.imshow(image.vessels)
 plt.show() 
 
@@ -83,11 +83,14 @@ import matplotlib.pyplot as plt
 from skimage.util import invert
 
 image=image.vessels
-import scipy.ndimage as ndimage
+from skimage.morphology import disk
 
 # perform skeletonization
 skeleton = skeletonize(image)
 
+##TODO - MOSTRAR SKELETON EM CIMA DA IMAGEM ORIGINAL 
+    
+    
 # display results
 fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(8, 4),
                          sharex=True, sharey=True,
