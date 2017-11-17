@@ -69,13 +69,15 @@ class retinal_image:
     def load_red_intensity(self):
         self.red_intensity = compute_red_intensity(self)  
         
-image = retinal_image(retinal_im_list[15], 'train')
+image = retinal_image(retinal_im_list[31-21], 'train')
 io.imshow(image.vessels)
 plt.show() 
 
+img=image.image; 
 
 from skimage.feature import hog
 from skimage import data, color, exposure
+from skimage.color import rgb2gray
 
 from skimage.morphology import skeletonize
 from skimage import data
@@ -92,22 +94,22 @@ skeleton = skeletonize(image)
     
     
 # display results
-fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(8, 4),
-                         sharex=True, sharey=True,
-                         subplot_kw={'adjustable': 'box-forced'})
-
-ax = axes.ravel()
-
-ax[0].imshow(image, cmap=plt.cm.gray)
-ax[0].axis('off')
-ax[0].set_title('original', fontsize=20)
-
-ax[1].imshow(skeleton, cmap=plt.cm.gray)
-ax[1].axis('off')
-ax[1].set_title('skeleton', fontsize=20)
-
-fig.tight_layout()
-plt.show()
+#fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(8, 4),
+#                         sharex=True, sharey=True,
+#                         subplot_kw={'adjustable': 'box-forced'})
+#
+#ax = axes.ravel()
+#
+#ax[0].imshow(image, cmap=plt.cm.gray)
+#ax[0].axis('off')
+#ax[0].set_title('original', fontsize=20)
+#
+#ax[1].imshow(skeleton, cmap=plt.cm.gray)
+#ax[1].axis('off')
+#ax[1].set_title('skeleton', fontsize=20)
+#
+#fig.tight_layout()
+#plt.show()
 
 from scipy.ndimage import binary_hit_or_miss
 
@@ -180,27 +182,21 @@ coordinates=np.nonzero(IMhit_mis_bin)
 coordinates=np.nonzero(IMhit_mis_bin)
 
 plt.figure(3)
-
 plt.imshow(skeleton)
 plt.scatter(x=coordinates[1],y=coordinates[0],c='r',s=20,marker='x')
 plt.show() 
 
 
-img = retinal_image(retinal_im_list[15], 'train')
-
-img= img.image
 
 plt.figure(4)
 plt.imshow(img)
 plt.show() 
 
-print("coordinates",skeleton[coordinates[0],coordinates[1]])
 skeleton[coordinates[0],coordinates[1]]=0; 
 skeleton[coordinates[0]+1,coordinates[1]]=0; 
 skeleton[coordinates[0]-1,coordinates[1]]=0; 
 skeleton[coordinates[0],coordinates[1]-1]=0; 
 skeleton[coordinates[0],coordinates[1]+1]=0; 
-print("coordinates",skeleton[coordinates[0],coordinates[1]])
 
 from skimage import measure
 all_labels = measure.label(skeleton)
@@ -209,8 +205,44 @@ from skimage.color import label2rgb
 
 image_label_overlay = label2rgb(all_labels,image=None,alpha=0.3,bg_label=0,bg_color=(0,0,0))
 
+#
+#plt.figure(5)
+#plt.imshow(image_label_overlay)
+#plt.scatter(x=coordinates[1],y=coordinates[0],c='r',s=20,marker='x')
+#plt.show() 
+from skimage.color import rgb2gray
 
-plt.figure(5)
-plt.imshow(image_label_overlay)
-plt.scatter(x=coordinates[1],y=coordinates[0],c='r',s=20,marker='x')
-plt.show() 
+img_gray=rgb2gray(img)
+from skimage.feature import blob_dog
+from skimage.filters import gaussian 
+img_gray=gaussian(img_gray,sigma=5)
+
+blobs_dog = blob_dog(img_gray, max_sigma=30, threshold=.8)
+
+blobs = [blobs_dog]
+colors = ['red']
+titles = ['Difference of Gaussian']
+sequence = zip(blobs, colors, titles)
+
+from skimage.filters import gaussian
+meancolorintensity=[]; 
+for blobs, cor, title in sequence:
+    fig, ax = plt.subplots(1, 1)
+    ax.set_title(title)
+    ax.imshow(image, interpolation='nearest',cmap='gray')
+    for blob in blobs:
+        y, x, r = blob
+        print("y",y,"x",x,"r",r)
+        c = plt.Circle((x, y), r, color=cor, linewidth=1, fill=False)
+        ax.add_patch(c)
+        area=np.mean(img_gray[int(y-round(r)):int(y+round(r)),int(x-round(r)):int(x+round(r))]) #ver se estao trocados
+        print(area)
+        meancolorintensity.append(area)
+print(meancolorintensity)
+plt.imshow(img_gray,cmap='gray')
+maxIndex=np.argmax(meancolorintensity); 
+
+plt.scatter(x=blobs[maxIndex,1],y=blobs[maxIndex,0],c='r',s=20,marker='x')
+plt.imshow(img_gray,cmap='gray')
+
+plt.show()
