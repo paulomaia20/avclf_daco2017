@@ -12,8 +12,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def detectOpticDisk(img_rgb,plotFlag):
-    img_gray=rgb2gray(img_rgb)
+def detectOpticDisk(img_gray,plotFlag):
     
     img_gray=gaussian(img_gray,sigma=5)
     

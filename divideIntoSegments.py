@@ -26,3 +26,5 @@ def divideIntoSegments(skeleton, coordinates, plotFlag):
         plt.imshow(image_label_overlay)
         plt.scatter(x=coordinates[1],y=coordinates[0],c='r',s=20,marker='x')
         plt.show() 
+        
+    return all_labels
