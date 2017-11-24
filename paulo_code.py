@@ -58,6 +58,8 @@ discretized_lines=[];
 discretized_singleline=[]; 
 from skimage.draw import line_aa
 
+diameter=np.zeros(np.max(labels))
+
 for props in regions:
     i=i+1; 
     y0, x0 = props.centroid
@@ -73,40 +75,29 @@ for props in regions:
     start_y=y0 + math.sin(math.pi/2 + orientation) * 0.25 * props.major_axis_length; 
     end_x=x0 + math.cos(math.pi/2 + orientation)*0.25*props.major_axis_length;
     end_y=y0 - math.sin(math.pi/2 + orientation) * 0.25 * props.major_axis_length;
-   
-    plt.imshow(skeleton)
-    plt.plot((start_x, end_x), (start_y, end_y), '-r', linewidth=2.5)
-    #plt.plot((x0, x1), (y0, y1), '-g', linewidth=2.5)
-   # rr, cc, val = line_aa(int(start_x), int(start_y), int(end_x), int(end_y))
-    #plt.scatter(x=rr,y=cc,c='b',s=20,marker='x')   
-    #discretized_singleline=[i, rr,cc]
+    tempImg=np.zeros((img_rgb.shape[0],img_rgb.shape[1]))
 
+    rr, cc, val = line_aa(int(start_x), int(start_y), int(end_x), int(end_y))
+    tempImg[cc,rr]=1; 
+    thin_perpendicularlines=skeletonize(tempImg)
+    coordinates=np.nonzero(thin_perpendicularlines)
+   # plt.imshow(skeleton)
+    plt.imshow(image_vessels)
+    plt.plot((start_x, end_x), (start_y, end_y), '-r', linewidth=2.5)
+    plt.scatter(x=rr,y=cc,c='b',s=20,marker='x') 
+    plt.scatter(x=coordinates[1],y=coordinates[0],c='g',s=20,marker='o')
+    plt.show()
+    diameter[i-1]=np.count_nonzero(image_vessels*thin_perpendicularlines) 
+
+    #plt.plot((x0, x1), (y0, y1), '-g', linewidth=2.5)
+   
     line=np.transpose([i,start_x, start_y, end_x,end_y])
     vessel_keypoints.append(line)
     
-
-plt.show()
-
 np_vesselkeypoints=np.array(vessel_keypoints)
 #Organized as follows: label , x0, y0 , x3 , y3. How to discretize ?
 
-#newImg=np.zeros((img_rgb.shape[0],img_rgb.shape[1]))
-diameter=np.zeros(np_vesselkeypoints[:,0].shape[0])
-for pp in range(np_vesselkeypoints.shape[0]):
-    tempImg=np.zeros((img_rgb.shape[0],img_rgb.shape[1]))
-    label=np_vesselkeypoints[pp,0]
-    start_x=np_vesselkeypoints[pp,1]
-    start_y=np_vesselkeypoints[pp,2]
-    end_x=np_vesselkeypoints[pp,3]
-    end_y=np_vesselkeypoints[pp,4]
-    rr, cc, val = line_aa(int(start_x), int(start_y), int(end_x), int(end_y))
-    #plt.scatter(x=rr,y=cc,c='b',s=20,marker='x')   
-    #discretized_singleline=[i, rr,cc]
-    tempImg[cc,rr]=1; 
-   # newImg[cc,rr]=1;
-    thin_perpendicularlines=skeletonize(tempImg)
-    diameter[int(label)]=np.count_nonzero(np.bitwise_and(image_vessels,thin_perpendicularlines)) 
-    #Diametro para label=label 
+    
 
     
 
