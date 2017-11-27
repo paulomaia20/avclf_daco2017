@@ -24,35 +24,37 @@ nr_retinal_ims = len(retinal_im_list) # number of retinal images of the training
 nr_ims = len(retinal_im_list) # same as above
 
 #Open images
-image_object = ri.retinal_image(retinal_im_list[39-21], 'train')
+#for kk in range(19):
+image_object = ri.retinal_image(retinal_im_list[1], 'train')
 img_rgb=image_object.image; 
 image_vessels=image_object.vessels
-
-#Do you want to plot?
-plotFlag=1
-
-# perform skeletonization
+    
+    #Do you want to plot?
+plotFlag=0
+    
+    # perform skeletonization
 skeleton=apply_skeleton.apply_skeleton(image_vessels,plotFlag)
-
-#Find interest points
+    
+    #Find interest points
 coordinates=find_interestpoints.find_interestpoints(skeleton,plotFlag)
-
-#Divide into segments
+    
+    #Divide into segments
 labels = divideIntoSegments.divideIntoSegments(skeleton, coordinates,plotFlag)
-
-#Homomorphic filtering to reduce 
+    
+    #Homomorphic filtering to reduce 
 img_rgb=apply_homomorphic_filtering.apply_homomorphic_filtering(image_object,img_rgb,plotFlag)
+    
+    #Detect optic disk
+img_gray=cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)   
+   
 
-#Detect optic disk
-img_gray=cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
-
-detectOpticDisk.detectOpticDisk(img_gray,plotFlag)
-
+y_disk, x_disk = detectOpticDisk.detectOpticDisk(image_object.image[:,:,1],1)
+    
 from skimage.measure import regionprops
-
+    
 regions=regionprops(labels)
 import math
-
+    
 orientations_image=np.zeros((img_rgb.shape[0],img_rgb.shape[1]))
 i=0
 from skimage.draw import line_aa
@@ -85,10 +87,21 @@ for props in regions:
     plt.scatter(x=rr,y=cc,c='b',s=20,marker='x') 
     plt.scatter(x=coordinates[1],y=coordinates[0],c='g',s=20,marker='o')
     plt.show()
-    meanDiameterInRegion[i-1]=np.mean(diameter[labels==(i-1)])
-
-   
+    meanDiameterInRegion[i-1]=np.mean(diameter[labels==(i)])
     
+
+#Calculate distance from optic disk
+#    
+#    - meter a imagem toda a 1 e o disco otico a 0 
+#- calcular distance transform 
+#- colar a vessel tree e ver a distancia para os pontos que vao svessels
+
+distances_image=np.ones((img_rgb.shape[0],img_rgb.shape[1]))
+distances_image[int(y_disk),int(x_disk)]=0; 
+#distance transform gives distance from white pixels to black pixels
+distanceToOpticDisk=ndimage.distance_transform_edt(distances_image)
+
+
 
     
 
