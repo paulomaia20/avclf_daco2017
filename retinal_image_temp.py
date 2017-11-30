@@ -6,7 +6,6 @@ import apply_skeleton
 import find_interestpoints 
 import divideIntoSegments
 import detectOpticDisk
-import obtainSkeletonWithoutCrossings
 from scipy import ndimage
 from skimage.measure import regionprops
 from skimage.filters import rank
@@ -91,7 +90,7 @@ def compute_local_features(retinal_image):
     hue_channel=color.rgb2hsv(retinal_image.image)[:,:,0]
     saturation_channel=color.rgb2hsv(retinal_image.image)[:,:,1]
     value_channel=color.rgb2hsv(retinal_image.image)[:,:,2]
-    skeleton_pixels=np.nonzero(retinal_image.skeletonWithoutCrossings)
+    skeleton_pixels=np.nonzero(retinal_image.skeleton)
     mean_red_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     mean_value_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     minimum_red_intensity=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
@@ -103,7 +102,7 @@ def compute_local_features(retinal_image):
     maximum_saturation_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     max_labels=np.amax(retinal_image.labels)
     distanceTransform=ndimage.distance_transform_edt(retinal_image.vessels)
-    diameter=distanceTransform * retinal_image.skeletonWithoutCrossings
+    diameter=distanceTransform * retinal_image.skeleton
     meanDiameterInRegion=np.zeros(np.max(retinal_image.labels))
     i=0
     for props in retinal_image.regions:
@@ -166,13 +165,12 @@ class retinal_image:
         self.arteries = io.imread(path_arteries+name, dtype=bool) #[:-4]+'.png'
         self.veins = io.imread(path_veins+name, dtype=bool) #[:-4]+'.png'
         self.skeleton = apply_skeleton.apply_skeleton(self.vessels,0)
+        self.veins_skeleton=self.skeleton*self.veins; 
+        self.arteries_skeleton=self.skeleton*self.arteries; 
         self.x_opticdisk,self.y_opticdisk=detectOpticDisk.detectOpticDisk((self.image)[:,:,1],0)
         self.coordinates=find_interestpoints.find_interestpoints(self.skeleton,0)
         self.labels=divideIntoSegments.divideIntoSegments(self.skeleton, self.coordinates,0)
-        self.skeletonWithoutCrossings=obtainSkeletonWithoutCrossings.obtainSkeletonWithoutCrossings(self.skeleton,self.coordinates)
         self.regions=regionprops(self.labels)
-        self.veins_skeleton=self.skeletonWithoutCrossings*self.veins; 
-        self.arteries_skeleton=self.skeletonWithoutCrossings*self.arteries; 
         
         # AVAILABLE FEATURES: These are place-holders for features that you may want to compute out of each image
         self.saturation = None
@@ -218,4 +216,3 @@ class retinal_image:
     
     def load_distance_to_optic_disk(self):
         self.distance_to_optic_disk = compute_distance_to_optic_disk(self)
-

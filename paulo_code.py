@@ -25,7 +25,7 @@ nr_ims = len(retinal_im_list) # same as above
 
 #Open images
 #for kk in range(19):
-image_object = ri.retinal_image(retinal_im_list[1], 'train')
+image_object = ri.retinal_image(retinal_im_list[6], 'train')
 img_rgb=image_object.image; 
 image_vessels=image_object.vessels
     
@@ -48,7 +48,7 @@ img_rgb=apply_homomorphic_filtering.apply_homomorphic_filtering(image_object,img
 img_gray=cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)   
    
 
-y_disk, x_disk = detectOpticDisk.detectOpticDisk(image_object.image[:,:,1],1)
+y_disk, x_disk = detectOpticDisk.detectOpticDisk(image_object.image[:,:,1],plotFlag)
     
 from skimage.measure import regionprops
     
@@ -82,24 +82,15 @@ for props in regions:
     tempImg[cc,rr]=1; 
     thin_perpendicularlines=skeletonize(tempImg)
     coordinates=np.nonzero(thin_perpendicularlines)
-    plt.imshow(image_vessels)
-    plt.plot((start_x, end_x), (start_y, end_y), '-r', linewidth=2.5)
-    plt.scatter(x=rr,y=cc,c='b',s=20,marker='x') 
-    plt.scatter(x=coordinates[1],y=coordinates[0],c='g',s=20,marker='o')
-    plt.show()
+#    plt.imshow(image_vessels)
+#    plt.plot((start_x, end_x), (start_y, end_y), '-r', linewidth=2.5)
+#    plt.scatter(x=rr,y=cc,c='b',s=20,marker='x') 
+#    plt.scatter(x=coordinates[1],y=coordinates[0],c='g',s=20,marker='o')
+#    plt.show()
     meanDiameterInRegion[i-1]=np.mean(diameter[labels==(i)])
     
 
-#Calculate distance from optic disk
-#    
-#    - meter a imagem toda a 1 e o disco otico a 0 
-#- calcular distance transform 
-#- colar a vessel tree e ver a distancia para os pontos que vao svessels
 
-distances_image=np.ones((img_rgb.shape[0],img_rgb.shape[1]))
-distances_image[int(y_disk),int(x_disk)]=0; 
-#distance transform gives distance from white pixels to black pixels
-distanceToOpticDisk=ndimage.distance_transform_edt(distances_image)
 
 
 
