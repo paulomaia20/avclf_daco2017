@@ -6,7 +6,7 @@ import numpy as np
 from skimage import io
 from skimage import img_as_float
 from skimage import color
-import retinal_image_temp as ri
+import retinal_image as ri
 
 path_to_training_retinal_ims = 'data/training/images/'
 retinal_im_list = os.listdir(path_to_training_retinal_ims)
@@ -26,7 +26,7 @@ X = np.zeros([nr_examples, nr_features])
 # pre-allocate ground-truth vector
 y = np.zeros([nr_examples,])
     
-for i in range(nr_ims-19):
+for i in range(nr_ims):
     im_name = retinal_im_list[i]
     image = ri.retinal_image(im_name, 'train')
 

@@ -91,7 +91,6 @@ def compute_local_features(retinal_image):
     hue_channel=color.rgb2hsv(retinal_image.image)[:,:,0]
     saturation_channel=color.rgb2hsv(retinal_image.image)[:,:,1]
     value_channel=color.rgb2hsv(retinal_image.image)[:,:,2]
-    skeleton_pixels=np.nonzero(retinal_image.skeletonWithoutCrossings)
     mean_red_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     mean_value_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     minimum_red_intensity=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
@@ -105,12 +104,11 @@ def compute_local_features(retinal_image):
     distanceTransform=ndimage.distance_transform_edt(retinal_image.vessels)
     diameter=distanceTransform * retinal_image.skeletonWithoutCrossings
     meanDiameterInRegion=np.zeros(np.max(retinal_image.labels))
-    i=0
-    for props in retinal_image.regions:
-        i=i+1; 
-        meanDiameterInRegion[i-1]=np.mean(diameter[retinal_image.labels==(i)])
+
     for i in range(1, max_labels + 1):
+        meanDiameterInRegion[i-1]=np.mean(diameter[retinal_image.labels==(i)])
         disk_diameter=meanDiameterInRegion[i-1]
+#        disk_diameter=2; 
         disk_diameter_large=2*disk_diameter
         labels_points=(retinal_image.labels==i)
         labels_points_indexes=np.nonzero(labels_points)
