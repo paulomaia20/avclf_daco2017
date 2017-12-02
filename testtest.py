@@ -51,10 +51,20 @@ minimum_hue_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.
 maximum_blue_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
 maximum_value_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
 maximum_saturation_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+
+
+mean_blue_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+mean_blue_intensity_large_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+mean_value_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+mean_value_intensity_large_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+
+
 max_labels=np.amax(retinal_image.labels)
 distanceTransform=ndimage.distance_transform_edt(retinal_image.vessels)
 diameter=distanceTransform * retinal_image.skeletonWithoutCrossings
 meanDiameterInRegion=np.zeros(np.max(retinal_image.labels))
+
+
 i=0
 for props in retinal_image.regions:
     i=i+1; 
@@ -88,5 +98,23 @@ for i in range(1, max_labels + 1):
     maximum_saturation_large[rows,cols]=maximum_saturation_large_iteration[rows,cols]
     maximum_value_large_iteration=maximum(value_channel,disk(disk_diameter_large))
     maximum_value_large[rows,cols]=maximum_value_large_iteration[rows,cols]
+    #std Blue
+    mean_blue_intensity_large_iteration=mean(blue_channel ** 2,disk(disk_diameter_large))
+    mean_blue_intensity_large[rows,cols]=mean_blue_intensity_large_iteration[rows,cols] 
+    mean_blue_intensity_large_potency_iteration = mean(blue_channel,disk(disk_diameter_large))
+    mean_blue_intensity_large_potency[rows,cols] =  mean_blue_intensity_large_potency_iteration[rows,cols] ** 2
+    
+    std_blue = mean_blue_intensity_large_potency-mean_blue_intensity_large
+    std_blue_final = np.sqrt(std_blue)
+    #std Value
+    mean_value_intensity_large_iteration=mean(value_channel ** 2,disk(disk_diameter_large))
+    mean_value_intensity_large[rows,cols]=mean_value_intensity_large_iteration[rows,cols] 
+    mean_value_intensity_large_potency_iteration = mean(value_channel,disk(disk_diameter_large))
+    mean_value_intensity_large_potency[rows,cols] =  mean_value_intensity_large_potency_iteration[rows,cols] ** 2
+    
+    std_value = mean_value_intensity_large_potency-mean_value_intensity_large
+    std_value_final = np.sqrt(std_value)
+    
+
     #print(mean_intensity)
     print(i, ':',disk_diameter)
