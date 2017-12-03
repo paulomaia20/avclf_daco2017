@@ -42,6 +42,7 @@ blue_channel=retinal_image.image[:,:,2]
 hue_channel=color.rgb2hsv(retinal_image.image)[:,:,0]
 saturation_channel=color.rgb2hsv(retinal_image.image)[:,:,1]
 value_channel=color.rgb2hsv(retinal_image.image)[:,:,2]
+
 mean_red_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
 mean_value_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
 minimum_red_intensity=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
@@ -51,13 +52,14 @@ minimum_hue_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.
 maximum_blue_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
 maximum_value_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
 maximum_saturation_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-
-
+#
 mean_blue_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
 mean_blue_intensity_large_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
 mean_value_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
 mean_value_intensity_large_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-
+# features Extra
+mean_red_intensity_large1 = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+mean_red_intensity_large_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
 
 max_labels=np.amax(retinal_image.labels)
 distanceTransform=ndimage.distance_transform_edt(retinal_image.vessels)
@@ -102,19 +104,35 @@ for i in range(1, max_labels + 1):
     mean_blue_intensity_large_iteration=mean(blue_channel ** 2,disk(disk_diameter_large))
     mean_blue_intensity_large[rows,cols]=mean_blue_intensity_large_iteration[rows,cols] 
     mean_blue_intensity_large_potency_iteration = mean(blue_channel,disk(disk_diameter_large))
-    mean_blue_intensity_large_potency[rows,cols] =  mean_blue_intensity_large_potency_iteration[rows,cols] ** 2
-    
-    std_blue = mean_blue_intensity_large_potency-mean_blue_intensity_large
+    mean_blue_intensity_large_potency[rows,cols] =  mean_blue_intensity_large_potency_iteration[rows,cols] ** 2 
+    std_blue =mean_blue_intensity_large_potency - mean_blue_intensity_large
+    std_blue =np.abs(std_blue)
     std_blue_final = np.sqrt(std_blue)
     #std Value
     mean_value_intensity_large_iteration=mean(value_channel ** 2,disk(disk_diameter_large))
     mean_value_intensity_large[rows,cols]=mean_value_intensity_large_iteration[rows,cols] 
     mean_value_intensity_large_potency_iteration = mean(value_channel,disk(disk_diameter_large))
     mean_value_intensity_large_potency[rows,cols] =  mean_value_intensity_large_potency_iteration[rows,cols] ** 2
-    
-    std_value = mean_value_intensity_large_potency-mean_value_intensity_large
+    std_value =mean_value_intensity_large_potency-mean_value_intensity_large
+    std_value = np.abs(std_value)
     std_value_final = np.sqrt(std_value)
+    #std red
+    mean_red_intensity_large_iteration1=mean(red_channel ** 2,disk(disk_diameter_large))
+    mean_red_intensity_large1[rows,cols]=mean_red_intensity_large_iteration1[rows,cols] 
+    mean_red_intensity_large_potency_iteration = mean(red_channel,disk(disk_diameter_large))
+    mean_red_intensity_large_potency[rows,cols] =  mean_red_intensity_large_potency_iteration[rows,cols] ** 2  
+    std_red = mean_red_intensity_large_potency-mean_red_intensity_large
+    std_red = np.abs(std_red)
+    std_red_final = np.sqrt(std_red)
     
+    
+    
+    #Large area min gradient norm
 
+    #Small area mean gradient norm
+    
+    
+    
+    
     #print(mean_intensity)
     print(i, ':',disk_diameter)

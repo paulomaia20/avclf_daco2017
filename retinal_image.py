@@ -83,6 +83,13 @@ def compute_distance_to_optic_disk(retinal_image):
     #distance transform gives distance from white pixels to black pixels
     distanceToOpticDisk=ndimage.distance_transform_edt(distances_image)
     return distanceToOpticDisk
+
+def compite_distance_from_image_center(retinal_image):
+    distances_image=np.ones((retinal_image.image.shape[0],retinal_image.image.shape[1]))
+    distances_image[int(retinal_image.image.image.shape[1]/2),int(retinal_image.image.shape[0]/2)]=0; 
+    #distance transform gives distance from white pixels to black pixels
+    distanceFromImageCenter=ndimage.distance_transform_edt(distances_image)
+    return distanceFromImageCenter
   
 def compute_local_features(retinal_image):
     red_channel=retinal_image.image[:,:,0]
@@ -189,6 +196,7 @@ class retinal_image:
         self.maximum_saturation_large = None
         self.maximum_value_large = None
         self.distance_to_optic_disk = None
+        self.distance_from_image_center = None
         
     # The retinal_image object knows how to compute these features. 
     # It does that by calling to the functions defined in the previous cells    
