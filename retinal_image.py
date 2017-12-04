@@ -76,7 +76,7 @@ def compute_blue_intensity(retinal_image):
     '''
     
     return retinal_image.image[:,:,2]
-
+ 
 def compute_distance_to_optic_disk(retinal_image):
     distances_image=np.ones((retinal_image.image.shape[0],retinal_image.image.shape[1]))
     distances_image[int(retinal_image.y_opticdisk),int(retinal_image.x_opticdisk)]=0; 
@@ -84,7 +84,7 @@ def compute_distance_to_optic_disk(retinal_image):
     distanceToOpticDisk=ndimage.distance_transform_edt(distances_image)
     return distanceToOpticDisk
 
-def compite_distance_from_image_center(retinal_image):
+def compute_distance_from_image_center(retinal_image):
     distances_image=np.ones((retinal_image.image.shape[0],retinal_image.image.shape[1]))
     distances_image[int(retinal_image.image.image.shape[1]/2),int(retinal_image.image.shape[0]/2)]=0; 
     #distance transform gives distance from white pixels to black pixels
@@ -107,6 +107,14 @@ def compute_local_features(retinal_image):
     maximum_blue_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     maximum_value_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     maximum_saturation_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_blue_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_blue_intensity_large_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_value_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_value_intensity_large_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    # features Extra
+    mean_red_intensity_large1 = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_red_intensity_large_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    
     max_labels=np.amax(retinal_image.labels)
     distanceTransform=ndimage.distance_transform_edt(retinal_image.vessels)
     diameter=distanceTransform * retinal_image.skeletonWithoutCrossings
@@ -143,9 +151,33 @@ def compute_local_features(retinal_image):
         maximum_saturation_large[rows,cols]=maximum_saturation_large_iteration[rows,cols]
         maximum_value_large_iteration=maximum(value_channel,disk(disk_diameter_large))
         maximum_value_large[rows,cols]=maximum_value_large_iteration[rows,cols]
+        #std Blue 
+        mean_blue_intensity_large_iteration=mean(blue_channel ** 2,disk(disk_diameter_large))
+        mean_blue_intensity_large[rows,cols]=mean_blue_intensity_large_iteration[rows,cols] 
+        mean_blue_intensity_large_potency_iteration = mean(blue_channel,disk(disk_diameter_large))
+        mean_blue_intensity_large_potency[rows,cols] =  mean_blue_intensity_large_potency_iteration[rows,cols] ** 2 
+        std_blue =mean_blue_intensity_large_potency - mean_blue_intensity_large
+        std_blue =np.abs(std_blue)
+        std_blue_final = np.sqrt(std_blue)
+        #std Value
+        mean_value_intensity_large_iteration=mean(value_channel ** 2,disk(disk_diameter_large))
+        mean_value_intensity_large[rows,cols]=mean_value_intensity_large_iteration[rows,cols] 
+        mean_value_intensity_large_potency_iteration = mean(value_channel,disk(disk_diameter_large))
+        mean_value_intensity_large_potency[rows,cols] =  mean_value_intensity_large_potency_iteration[rows,cols] ** 2
+        std_value =mean_value_intensity_large_potency-mean_value_intensity_large
+        std_value = np.abs(std_value)
+        std_value_final = np.sqrt(std_value)
+        #std red
+        mean_red_intensity_large_iteration1=mean(red_channel ** 2,disk(disk_diameter_large))
+        mean_red_intensity_large1[rows,cols]=mean_red_intensity_large_iteration1[rows,cols] 
+        mean_red_intensity_large_potency_iteration = mean(red_channel,disk(disk_diameter_large))
+        mean_red_intensity_large_potency[rows,cols] =  mean_red_intensity_large_potency_iteration[rows,cols] ** 2  
+        std_red = mean_red_intensity_large_potency-mean_red_intensity_large
+        std_red = np.abs(std_red)
+        std_red_final = np.sqrt(std_red)
         #print(mean_intensity)
         print(i, ':',disk_diameter)
-    return mean_red_intensity_large, mean_value_large, minimum_red_intensity, minimum_value, minimum_blue_intensity_large, minimum_hue_large, maximum_blue_intensity_large, maximum_saturation_large, maximum_value_large
+    return mean_red_intensity_large, mean_value_large, minimum_red_intensity, minimum_value, minimum_blue_intensity_large, minimum_hue_large, maximum_blue_intensity_large, maximum_saturation_large, maximum_value_large, std_blue_final, std_value_final, std_red_final
     
 class retinal_image:   
     def __init__(self, name, train_or_test):
@@ -195,6 +227,9 @@ class retinal_image:
         self.maximum_blue_intensity_large = None
         self.maximum_saturation_large = None
         self.maximum_value_large = None
+        self.std_blue_final = None
+        self.std_value_final = None
+        self.std_red_final = None
         self.distance_to_optic_disk = None
         self.distance_from_image_center = None
         
@@ -220,8 +255,11 @@ class retinal_image:
         self.blue_intensity = compute_blue_intensity(self) 
         
     def load_local_features(self):
-        self.mean_red_intensity_large, self.mean_value_large, self.minimum_red_intensity, self.minimum_value, self.minimum_blue_intensity_large, self.minimum_hue_large, self.maximum_blue_intensity_large, self.maximum_saturation_large, self.maximum_value_large = compute_local_features(self)
+        self.mean_red_intensity_large, self.mean_value_large, self.minimum_red_intensity, self.minimum_value, self.minimum_blue_intensity_large, self.minimum_hue_large, self.maximum_blue_intensity_large, self.maximum_saturation_large, self.maximum_value_large, self.std_blue_final, self.std_value_final, self.std_red_final = compute_local_features(self)
     
     def load_distance_to_optic_disk(self):
         self.distance_to_optic_disk = compute_distance_to_optic_disk(self)
+        
+    def load_distance_from_image_center(self):   
+        self.distance_from_image_center = compute_distance_from_image_center(self)
 
