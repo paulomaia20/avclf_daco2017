@@ -8,10 +8,12 @@ import divideIntoSegments
 import detectOpticDisk
 import obtainSkeletonWithoutCrossings
 from scipy import ndimage
+from skimage.restoration import denoise_nl_means
 from skimage.measure import regionprops
 from skimage.filters import rank
 from skimage.filters.rank import maximum, minimum, mean
 from skimage.morphology import skeletonize, square, disk
+import apply_homomorphic_filtering
 
 path_to_training_retinal_ims = 'data/training/images/'
 path_to_training_retinal_masks = 'data/training/masks/'
@@ -196,9 +198,10 @@ class retinal_image:
             path_veins = path_to_training_veins
         else:
             print('Invalid mode')
-            
-        self.image = img_as_float(io.imread(path_im+name))
+        denoised_img = denoise_nl_means(img_as_float(io.imread(path_im+name)), h=0.01, multichannel=True)
+        self.image=img_as_float(io.imread(path_im+name))
         self.mask = io.imread(path_mask+name[:-4]+'_mask.gif', dtype=bool)
+        self.preprocessed_image = apply_homomorphic_filtering.apply_homomorphic_filtering(self.mask,denoised_img,0)
         self.vessels = io.imread(path_vessels+name, dtype=bool) #[:-4]+'.png'
         self.arteries = io.imread(path_arteries+name, dtype=bool) #[:-4]+'.png'
         self.veins = io.imread(path_veins+name, dtype=bool) #[:-4]+'.png'

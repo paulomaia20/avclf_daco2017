@@ -16,7 +16,7 @@ import numpy as np
 import cv2
 
 
-def apply_homomorphic_filtering(img_object, img_rgb, plotFlag):
+def apply_homomorphic_filtering(mask, img_rgb, plotFlag):
     img_rgb = np.float32(img_rgb)
     
     rows,cols,dim = img_rgb.shape
@@ -25,7 +25,7 @@ def apply_homomorphic_filtering(img_object, img_rgb, plotFlag):
     
     imgHSV = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2HSV)
     H,S,V = cv2.split(imgHSV)
-    indices=(img_object.mask==0)
+    indices=(mask==0)
     indices=indices.astype(np.int)
     H[indices==1]=0
     S[indices==1]=0
