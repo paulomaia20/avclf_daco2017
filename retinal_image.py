@@ -100,22 +100,75 @@ def compute_local_features(retinal_image):
     hue_channel=color.rgb2hsv(retinal_image.image)[:,:,0]
     saturation_channel=color.rgb2hsv(retinal_image.image)[:,:,1]
     value_channel=color.rgb2hsv(retinal_image.image)[:,:,2]
+    #mean- large
     mean_red_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_blue_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_green_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_hue_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_saturation_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     mean_value_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    minimum_red_intensity=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    minimum_value=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    #mean- small
+    mean_red_intensity=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_green_intensity=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_blue_intensity=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_hue=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_saturation=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_value=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    #minimum- large
+    minimum_red_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    minimum_green_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     minimum_blue_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     minimum_hue_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    minimum_saturation_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    minimum_value_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))  
+    #minimum- small
+    minimum_red_intensity=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    minimum_green_intensity=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    minimum_blue_intensity=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    minimum_hue=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    minimum_saturation=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    minimum_value=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    #maximum- large
+    maximum_red_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    maximum_green_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     maximum_blue_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    maximum_value_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    maximum_hue_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     maximum_saturation_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    mean_blue_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    mean_blue_intensity_large_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    mean_value_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    mean_value_intensity_large_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    # features Extra
+    maximum_value_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    #maximum- small
+    maximum_red_intensity=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    maximum_green_intensity=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    maximum_blue_intensity=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    maximum_hue=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    maximum_saturation=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    maximum_value=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    # std- large
     mean_red_intensity_large1 = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     mean_red_intensity_large_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_green_intensity_large1=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_green_intensity_large_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_blue_intensity_large1=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_blue_intensity_large_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_hue_large1=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_hue_large_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_saturation_large1=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_saturation_large_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_value_large1=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_value_large_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    # std- small
+    mean_red_intensity_1 = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_red_intensity_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_green_intensity_1=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_green_intensity_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_blue_intensity_1=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_blue_intensity_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_hue_1=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_hue_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_saturation_1=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_saturation_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_value_1=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    mean_value_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    
     
     max_labels=np.amax(retinal_image.labels)
     distanceTransform=ndimage.distance_transform_edt(retinal_image.vessels)
@@ -135,52 +188,232 @@ def compute_local_features(retinal_image):
         #labels_points_int=labels_points.astype(int)
         #mean_intensity[rows,cols]=mean(img_rgb[labels_points==True], disk(disk_diameter)) 
         #mean_intensity[rows,cols]=mean(red_channel[rows,cols], disk(disk_diameter)) 
+        #mean- large
         mean_red_intensity_large_iteration=mean(red_channel,disk(disk_diameter_large))
         mean_red_intensity_large[rows,cols]=mean_red_intensity_large_iteration[rows,cols]
+        mean_green_intensity_large_iteration=mean(green_channel,disk(disk_diameter_large))
+        mean_green_intensity_large[rows,cols]=mean_green_intensity_large_iteration[rows,cols]
+        mean_blue_intensity_large_iteration=mean(blue_channel,disk(disk_diameter_large))
+        mean_blue_intensity_large[rows,cols]=mean_blue_intensity_large_iteration[rows,cols]
+        mean_hue_large_iteration=mean(hue_channel,disk(disk_diameter_large))
+        mean_hue_large[rows,cols]=mean_hue_large_iteration[rows,cols]
+        mean_saturation_large_iteration=mean(saturation_channel,disk(disk_diameter_large))
+        mean_saturation_large[rows,cols]=mean_saturation_large_iteration[rows,cols]
         mean_value_large_iteration=mean(value_channel,disk(disk_diameter_large))
         mean_value_large[rows,cols]=mean_value_large_iteration[rows,cols]
+        #mean- small
+        mean_red_intensity_iteration=mean(red_channel,disk(disk_diameter))
+        mean_red_intensity[rows,cols]=mean_red_intensity_iteration[rows,cols]
+        mean_green_intensity_iteration=mean(green_channel,disk(disk_diameter))
+        mean_green_intensity[rows,cols]=mean_green_intensity_iteration[rows,cols]
+        mean_blue_intensity_iteration=mean(blue_channel,disk(disk_diameter))
+        mean_blue_intensity[rows,cols]=mean_blue_intensity_iteration[rows,cols]
+        mean_hue_iteration=mean(hue_channel,disk(disk_diameter))
+        mean_hue[rows,cols]=mean_hue_iteration[rows,cols]
+        mean_saturation_iteration=mean(saturation_channel,disk(disk_diameter))
+        mean_saturation[rows,cols]=mean_saturation_iteration[rows,cols]
+        mean_value_iteration=mean(value_channel,disk(disk_diameter))
+        mean_value[rows,cols]=mean_value_iteration[rows,cols]
+        #minimum- large
         minimum_red_intensity_iteration=minimum(red_channel,disk(disk_diameter))
         minimum_red_intensity[rows,cols]=minimum_red_intensity_iteration[rows,cols]
+        minimum_green_intensity_iteration=minimum(green_channel,disk(disk_diameter))
+        minimum_green_intensity[rows,cols]=minimum_green_intensity_iteration[rows,cols]
+        minimum_blue_intensity_iteration=minimum(blue_channel,disk(disk_diameter))
+        minimum_blue_intensity[rows,cols]=minimum_blue_intensity_iteration[rows,cols]
+        minimum_hue_iteration=minimum(hue_channel,disk(disk_diameter))
+        minimum_hue[rows,cols]=minimum_hue_iteration[rows,cols]
+        minimum_saturation_iteration=minimum(saturation_channel,disk(disk_diameter))
+        minimum_saturation[rows,cols]=minimum_saturation_iteration[rows,cols]
         minimum_value_iteration=minimum(value_channel,disk(disk_diameter))
         minimum_value[rows,cols]=minimum_value_iteration[rows,cols]
+        #minimum- small
+        minimum_red_intensity_large_iteration=minimum(red_channel,disk(disk_diameter_large))
+        minimum_red_intensity_large[rows,cols]=minimum_red_intensity_large_iteration[rows,cols]
+        minimum_green_intensity_large_iteration=minimum(green_channel,disk(disk_diameter_large))
+        minimum_green_intensity_large[rows,cols]=minimum_green_intensity_large_iteration[rows,cols]
         minimum_blue_intensity_large_iteration=minimum(blue_channel,disk(disk_diameter_large))
         minimum_blue_intensity_large[rows,cols]=minimum_blue_intensity_large_iteration[rows,cols]
         minimum_hue_large_iteration=minimum(hue_channel,disk(disk_diameter_large))
         minimum_hue_large[rows,cols]=minimum_hue_large_iteration[rows,cols]
+        minimum_saturation_large_iteration=minimum(saturation_channel,disk(disk_diameter_large))
+        minimum_saturation_large[rows,cols]=minimum_saturation_large_iteration[rows,cols]
+        minimum_value_large_iteration=minimum(value_channel,disk(disk_diameter_large))
+        minimum_value_large[rows,cols]=minimum_value_large_iteration[rows,cols]
+        #maximum- large
+        maximum_red_intensity_large_iteration=maximum(red_channel,disk(disk_diameter_large))
+        maximum_red_intensity_large[rows,cols]=maximum_red_intensity_large_iteration[rows,cols]
+        maximum_green_intensity_large_iteration=maximum(green_channel,disk(disk_diameter_large))
+        maximum_green_intensity_large[rows,cols]=maximum_green_intensity_large_iteration[rows,cols]
         maximum_blue_intensity_large_iteration=maximum(blue_channel,disk(disk_diameter_large))
         maximum_blue_intensity_large[rows,cols]=maximum_blue_intensity_large_iteration[rows,cols]
+        maximum_hue_large_iteration=maximum(hue_channel,disk(disk_diameter_large))
+        maximum_hue_large[rows,cols]=maximum_hue_large_iteration[rows,cols]
         maximum_saturation_large_iteration=maximum(saturation_channel,disk(disk_diameter_large))
         maximum_saturation_large[rows,cols]=maximum_saturation_large_iteration[rows,cols]
         maximum_value_large_iteration=maximum(value_channel,disk(disk_diameter_large))
         maximum_value_large[rows,cols]=maximum_value_large_iteration[rows,cols]
-        #std Blue 
-        mean_blue_intensity_large_iteration=mean(blue_channel ** 2,disk(disk_diameter_large))
-        mean_blue_intensity_large[rows,cols]=mean_blue_intensity_large_iteration[rows,cols] 
-        mean_blue_intensity_large_potency_iteration = mean(blue_channel,disk(disk_diameter_large))
-        mean_blue_intensity_large_potency[rows,cols] =  mean_blue_intensity_large_potency_iteration[rows,cols] ** 2 
-        std_blue =mean_blue_intensity_large_potency - mean_blue_intensity_large
-        std_blue =np.abs(std_blue)
-        std_blue_final = np.sqrt(std_blue)
-        #std Value
-        mean_value_intensity_large_iteration=mean(value_channel ** 2,disk(disk_diameter_large))
-        mean_value_intensity_large[rows,cols]=mean_value_intensity_large_iteration[rows,cols] 
-        mean_value_intensity_large_potency_iteration = mean(value_channel,disk(disk_diameter_large))
-        mean_value_intensity_large_potency[rows,cols] =  mean_value_intensity_large_potency_iteration[rows,cols] ** 2
-        std_value =mean_value_intensity_large_potency-mean_value_intensity_large
-        std_value = np.abs(std_value)
-        std_value_final = np.sqrt(std_value)
+        #maximum- small
+        maximum_red_intensity_iteration=maximum(red_channel,disk(disk_diameter))
+        maximum_red_intensity[rows,cols]=maximum_red_intensity_iteration[rows,cols]
+        maximum_green_intensity_iteration=maximum(green_channel,disk(disk_diameter))
+        maximum_green_intensity[rows,cols]=maximum_green_intensity_iteration[rows,cols]
+        maximum_blue_intensity_iteration=maximum(blue_channel,disk(disk_diameter))
+        maximum_blue_intensity[rows,cols]=maximum_blue_intensity_iteration[rows,cols]
+        maximum_hue_iteration=maximum(hue_channel,disk(disk_diameter))
+        maximum_hue[rows,cols]=maximum_hue_iteration[rows,cols]
+        maximum_saturation_iteration=maximum(saturation_channel,disk(disk_diameter))
+        maximum_saturation[rows,cols]=maximum_saturation_iteration[rows,cols]
+        maximum_value_iteration=maximum(value_channel,disk(disk_diameter))
+        maximum_value[rows,cols]=maximum_value_iteration[rows,cols]
+        #std-large
         #std red
         mean_red_intensity_large_iteration1=mean(red_channel ** 2,disk(disk_diameter_large))
         mean_red_intensity_large1[rows,cols]=mean_red_intensity_large_iteration1[rows,cols] 
         mean_red_intensity_large_potency_iteration = mean(red_channel,disk(disk_diameter_large))
         mean_red_intensity_large_potency[rows,cols] =  mean_red_intensity_large_potency_iteration[rows,cols] ** 2  
-        std_red = mean_red_intensity_large_potency-mean_red_intensity_large
+        std_red = mean_red_intensity_large_potency-mean_red_intensity_large1
         std_red = np.abs(std_red)
         std_red_final = np.sqrt(std_red)
+        #std green
+        mean_green_intensity_large_iteration1=mean(green_channel ** 2,disk(disk_diameter_large))
+        mean_green_intensity_large1[rows,cols]=mean_green_intensity_large_iteration1[rows,cols] 
+        mean_green_intensity_large_potency_iteration = mean(green_channel,disk(disk_diameter_large))
+        mean_green_intensity_large_potency[rows,cols] =  mean_green_intensity_large_potency_iteration[rows,cols] ** 2  
+        std_green = mean_green_intensity_large_potency-mean_green_intensity_large1
+        std_green = np.abs(std_green)
+        std_green_final = np.sqrt(std_green)
+        #std Blue 
+        mean_blue_intensity_large_iteration1=mean(blue_channel ** 2,disk(disk_diameter_large))
+        mean_blue_intensity_large1[rows,cols]=mean_blue_intensity_large_iteration1[rows,cols] 
+        mean_blue_intensity_large_potency_iteration = mean(blue_channel,disk(disk_diameter_large))
+        mean_blue_intensity_large_potency[rows,cols] =  mean_blue_intensity_large_potency_iteration[rows,cols] ** 2 
+        std_blue =mean_blue_intensity_large_potency - mean_blue_intensity_large1
+        std_blue =np.abs(std_blue)
+        std_blue_final = np.sqrt(std_blue)
+        #std hue
+        mean_hue_large_iteration1=mean(hue_channel ** 2,disk(disk_diameter_large))
+        mean_hue_large1[rows,cols]=mean_hue_large_iteration1[rows,cols] 
+        mean_hue_large_potency_iteration = mean(hue_channel,disk(disk_diameter_large))
+        mean_hue_large_potency[rows,cols] =  mean_hue_large_potency_iteration[rows,cols] ** 2
+        std_hue =mean_hue_large_potency-mean_hue_large1
+        std_hue = np.abs(std_hue)
+        std_hue_final = np.sqrt(std_hue)
+        #std saturation
+        mean_saturation_large_iteration1=mean(saturation_channel ** 2,disk(disk_diameter_large))
+        mean_saturation_large1[rows,cols]=mean_saturation_large_iteration1[rows,cols] 
+        mean_saturation_large_potency_iteration = mean(saturation_channel,disk(disk_diameter_large))
+        mean_saturation_large_potency[rows,cols] =  mean_saturation_large_potency_iteration[rows,cols] ** 2
+        std_saturation =mean_saturation_large_potency-mean_saturation_large1
+        std_saturation = np.abs(std_saturation)
+        std_saturation_final = np.sqrt(std_saturation)
+        #std Value
+        mean_value_large_iteration1=mean(value_channel ** 2,disk(disk_diameter_large))
+        mean_value_large1[rows,cols]=mean_value_large_iteration1[rows,cols] 
+        mean_value_large_potency_iteration = mean(value_channel,disk(disk_diameter_large))
+        mean_value_large_potency[rows,cols] =  mean_value_large_potency_iteration[rows,cols] ** 2
+        std_value =mean_value_large_potency-mean_value_large1
+        std_value = np.abs(std_value)
+        std_value_final = np.sqrt(std_value)
+        #std-small
+        #std red
+        mean_red_intensity_iteration1=mean(red_channel ** 2,disk(disk_diameter))
+        mean_red_intensity_1[rows,cols]=mean_red_intensity_iteration1[rows,cols] 
+        mean_red_intensity_potency_iteration = mean(red_channel,disk(disk_diameter))
+        mean_red_intensity_potency[rows,cols] =  mean_red_intensity_potency_iteration[rows,cols] ** 2  
+        std_red_small = mean_red_intensity_potency-mean_red_intensity_1
+        std_red_small = np.abs(std_red_small)
+        std_red_final_small = np.sqrt(std_red_small)
+        #std green
+        mean_green_intensity_iteration1=mean(green_channel ** 2,disk(disk_diameter))
+        mean_green_intensity_1[rows,cols]=mean_green_intensity_iteration1[rows,cols] 
+        mean_green_intensity_potency_iteration = mean(green_channel,disk(disk_diameter))
+        mean_green_intensity_potency[rows,cols] =  mean_green_intensity_potency_iteration[rows,cols] ** 2  
+        std_green_small = mean_green_intensity_potency-mean_green_intensity_1
+        std_green_small = np.abs(std_green_small)
+        std_green_final_small = np.sqrt(std_green_small)
+        #std Blue 
+        mean_blue_intensity_iteration1=mean(blue_channel ** 2,disk(disk_diameter))
+        mean_blue_intensity_1[rows,cols]=mean_blue_intensity_iteration1[rows,cols] 
+        mean_blue_intensity_potency_iteration = mean(blue_channel,disk(disk_diameter))
+        mean_blue_intensity_potency[rows,cols] =  mean_blue_intensity_potency_iteration[rows,cols] ** 2 
+        std_blue_small =mean_blue_intensity_potency - mean_blue_intensity_1
+        std_blue_small =np.abs(std_blue_small)
+        std_blue_final_small = np.sqrt(std_blue_small)
+        #std hue
+        mean_hue_iteration1=mean(hue_channel ** 2,disk(disk_diameter))
+        mean_hue_1[rows,cols]=mean_hue_iteration1[rows,cols] 
+        mean_hue_potency_iteration = mean(hue_channel,disk(disk_diameter))
+        mean_hue_potency[rows,cols] =  mean_hue_potency_iteration[rows,cols] ** 2
+        std_hue_small =mean_hue_potency-mean_hue_1
+        std_hue_small = np.abs(std_hue_small)
+        std_hue_final_small = np.sqrt(std_hue_small)
+        #std saturation
+        mean_saturation_iteration1=mean(saturation_channel ** 2,disk(disk_diameter))
+        mean_saturation_1[rows,cols]=mean_saturation_iteration1[rows,cols] 
+        mean_saturation_potency_iteration = mean(saturation_channel,disk(disk_diameter))
+        mean_saturation_potency[rows,cols] =  mean_saturation_potency_iteration[rows,cols] ** 2
+        std_saturation_small =mean_saturation_potency-mean_saturation_1
+        std_saturation_small = np.abs(std_saturation_small)
+        std_saturation_final_small = np.sqrt(std_saturation_small)
+        #std Value
+        mean_value_iteration1=mean(value_channel ** 2,disk(disk_diameter))
+        mean_value_1[rows,cols]=mean_value_iteration1[rows,cols] 
+        mean_value_potency_iteration = mean(value_channel,disk(disk_diameter))
+        mean_value_potency[rows,cols] =  mean_value_potency_iteration[rows,cols] ** 2
+        std_value_small =mean_value_potency-mean_value_1
+        std_value_small = np.abs(std_value_small)
+        std_value_final_small = np.sqrt(std_value_small)
+       
         #print(mean_intensity)
         print(i, ':',disk_diameter)
-    return mean_red_intensity_large, mean_value_large, minimum_red_intensity, minimum_value, minimum_blue_intensity_large, minimum_hue_large, maximum_blue_intensity_large, maximum_saturation_large, maximum_value_large, std_blue_final, std_value_final, std_red_final
+    return mean_red_intensity_large, mean_green_intensity_large, mean_blue_intensity_large, mean_hue_large, mean_saturation_large, mean_value_large, mean_red_intensity, mean_green_intensity, mean_blue_intensity, mean_hue, mean_saturation, mean_value, minimum_red_intensity_large, minimum_green_intensity_large, minimum_blue_intensity_large, minimum_hue_large, minimum_saturation_large, minimum_value_large, minimum_red_intensity, minimum_green_intensity, minimum_blue_intensity, minimum_hue, minimum_saturation, minimum_value, maximum_red_intensity_large, maximum_green_intensity_large, maximum_blue_intensity_large, maximum_hue_large, maximum_saturation_large, maximum_value_large, maximum_red_intensity, maximum_green_intensity, maximum_blue_intensity, maximum_hue, maximum_saturation, maximum_value, std_red_final, std_green_final, std_blue_final, std_hue_final, std_saturation_final, std_value_final, std_red_final_small, std_green_final_small, std_blue_final_small, std_hue_final_small, std_saturation_final_small, std_value_final_small
     
+def compute_line_features(retinal_image):
+    std_image=np.zeros((retinal_image.preprocessed_image.shape[0], retinal_image.preprocessed_image.shape[1]))
+    tempImg=np.zeros((retinal_image.preprocessed_image.shape[0],retinal_image.preprocessed_image.shape[1]))
+    i=0
+    for props in regions:
+        i=i+1
+        y0, x0 = props.centroid
+        orientation = props.orientation
+        orientations_image[labels==i]=orientation;
+        x1 = x0 + math.cos(orientation) * 0.5 * props.major_axis_length
+        y1 = y0 - math.sin(orientation) * 0.5 * props.major_axis_length
+        x3 = x0 + math.cos(math.pi/2 + orientation)*0.5*props.major_axis_length;
+        y3 = y0 - math.sin(math.pi/2 + orientation) * 0.5 * props.major_axis_length;
+        start_x=x0 - math.cos(math.pi/2 + orientation)*0.25*props.major_axis_length;
+        start_y=y0 + math.sin(math.pi/2 + orientation) * 0.25 * props.major_axis_length;
+        end_x=x0 + math.cos(math.pi/2 + orientation)*0.25*props.major_axis_length;
+        end_y=y0 - math.sin(math.pi/2 + orientation) * 0.25 * props.major_axis_length;
+        rr, cc, val = line_aa(int(start_x), int(start_y), int(end_x), int(end_y))
+        tempImg[rr, cc]=1
+        thin_perpendicularlines=skeletonize(tempImg)
+        region = thin_perpendicularlines*retinal_image.vessels #0s em todos os sitios menos na interseçao
+        if math.isnan(np.std(img_rgb[region==True])):
+            std_image[labels==i] = 0
+        else:
+            std_image[labels==i] = np.std(img_rgb[region==True])
+           
+    return std_image
+
+
+#Function MagnitudeGradient computes Gradient of the Sobel Filters. 
+#Params: img (image to be loaded), kernel (size of the kernel [1, 3, 5, 7])
+def magnitude_gradient(retinal_image):
+    # Load the image in grayscale
+    img = retinal_image.preprocessed_image.astype(np.float64)
+    kernel=1
+    #Apply Sobel Filter (this function has a variable Kernel Size)
+    sobelx = cv2.Sobel(img,cv2.CV_64F,1,0,ksize=kernel)
+    sobely = cv2.Sobel(img,cv2.CV_64F,0,1,ksize=kernel)
+    #Get the norm or absolute value
+    dsobelx = np.absolute(sobelx)
+    dsobely = np.absolute(sobely)
+    #Calculate the magnitude of the gradient
+    sm = cv2.magnitude(dsobelx, dsobely)
+    return sm
+
 class retinal_image:   
     def __init__(self, name, train_or_test):
         self.name = name
@@ -214,6 +447,7 @@ class retinal_image:
         self.veins_skeleton=self.skeletonWithoutCrossings*self.veins; 
         self.arteries_skeleton=self.skeletonWithoutCrossings*self.arteries; 
         
+        
         # AVAILABLE FEATURES: These are place-holders for features that you may want to compute out of each image
         self.saturation = None
         self.hue = None
@@ -222,28 +456,66 @@ class retinal_image:
         self.green_intensity = None
         self.blue_intensity = None
         self.mean_red_intensity_large = None
+        self.mean_green_intensity_large = None
+        self.mean_blue_intensity_large = None
+        self.mean_hue_large = None
+        self.mean_saturation_large = None
         self.mean_value_large = None
-        self.minimum_red_intensity = None
-        self.minimum_value = None
+        self.mean_red_intensity = None
+        self.mean_green_intensity = None
+        self.mean_blue_intensity = None
+        self.mean_hue = None
+        self.mean_saturation = None
+        self.mean_value = None
+        self.minimum_red_intensity_large = None
+        self.minimum_green_intensity_large = None
         self.minimum_blue_intensity_large = None
         self.minimum_hue_large = None
+        self.minimum_saturation_large = None
+        self.minimum_value_large = None
+        self.minimum_red_intensity = None
+        self.minimum_green_intensity = None
+        self.minimum_blue_intensity = None
+        self.minimum_hue = None
+        self.minimum_saturation = None
+        self.minimum_value = None
+        self.maximum_red_intensity_large = None
+        self.maximum_green_intensity_large = None
         self.maximum_blue_intensity_large = None
+        self.maximum_hue_large = None
         self.maximum_saturation_large = None
         self.maximum_value_large = None
-        self.std_blue_final = None
-        self.std_value_final = None
+        self.maximum_red_intensity = None
+        self.maximum_green_intensity = None
+        self.maximum_blue_intensity = None
+        self.maximum_hue = None
+        self.maximum_saturation = None
+        self.maximum_value = None
         self.std_red_final = None
+        self.std_green_final = None
+        self.std_blue_final = None
+        self.std_hue_final = None
+        self.std_saturation_final = None
+        self.std_value_final = None
+        self.std_red_final_small = None
+        self.std_green_final_small = None
+        self.std_blue_final_small = None
+        self.std_hue_final_small = None
+        self.std_saturation_final_small = None
+        self.std_value_final_small = None
         self.distance_to_optic_disk = None
         self.distance_from_image_center = None
+        self.compute_line_features = None
+        self.magnitude_gradient = None
         
     # The retinal_image object knows how to compute these features. 
     # It does that by calling to the functions defined in the previous cells    
-    def load_saturation(self):
-        # this calls an external function. If the attribute has not been initialized above, this will crash.
-        self.saturation = compute_saturation(self)
-        
+   
     def load_hue(self):
         self.hue = compute_hue(self)
+        
+    def load_saturation(self):
+        self.saturation = compute_saturation(self)
         
     def load_value(self):
         self.value = compute_value(self)
@@ -258,11 +530,16 @@ class retinal_image:
         self.blue_intensity = compute_blue_intensity(self) 
         
     def load_local_features(self):
-        self.mean_red_intensity_large, self.mean_value_large, self.minimum_red_intensity, self.minimum_value, self.minimum_blue_intensity_large, self.minimum_hue_large, self.maximum_blue_intensity_large, self.maximum_saturation_large, self.maximum_value_large, self.std_blue_final, self.std_value_final, self.std_red_final = compute_local_features(self)
+        self.mean_red_intensity_large, self.mean_green_intensity_large, self.mean_blue_intensity_large, self.mean_hue_large, self.mean_saturation_large, self.mean_value_large, self.mean_red_intensity, self.mean_green_intensity, self.mean_blue_intensity, self.mean_hue, self.mean_saturation, self.mean_value, self.minimum_red_intensity_large, self.minimum_green_intensity_large, self.minimum_blue_intensity_large, self.minimum_hue_large, self.minimum_saturation_large, self.minimum_value_large, self.minimum_red_intensity, self.minimum_green_intensity, self.minimum_blue_intensity, self.minimum_hue, self.minimum_saturation, self.minimum_value, self.maximum_red_intensity_large, self.maximum_green_intensity_large, self.maximum_blue_intensity_large, self.maximum_hue_large, self.maximum_saturation_large, self.maximum_value_large, self.maximum_red_intensity, self.maximum_green_intensity, self.maximum_blue_intensity, self.maximum_hue, self.maximum_saturation, self.maximum_value, self.std_red_final, self.std_green_final, self.std_blue_final, self.std_hue_final, self.std_saturation_final, self.std_value_final,  self.std_red_final_small, self.std_green_final_small, self.std_blue_final_small, self.std_hue_final_small, self.std_saturation_final_small, self.std_value_final_small   = compute_local_features(self)
     
     def load_distance_to_optic_disk(self):
         self.distance_to_optic_disk = compute_distance_to_optic_disk(self)
         
     def load_distance_from_image_center(self):   
         self.distance_from_image_center = compute_distance_from_image_center(self)
+    
+    def load_compute_line_features(self):
+        self.compute_line_features = compute_line_features(self)
 
+    def load_magnitude_gradient(self):
+        self.magnitude_gradient = magnitude_gradient(self)
