@@ -40,7 +40,7 @@ for i in range(nr_ims):
     image.load_local_features()
     image.load_distance_to_optic_disk()
     image.load_distance_from_image_center()
-    image.load_line_features()
+    image.load_compute_line_features()
     image.load_magnitude_gradient()
     
     # extract samples from arteries
@@ -295,10 +295,20 @@ for i in range(nr_ims):
     veins_samples_distance_from_image_center= image.distance_from_image_center[image.veins_skeleton == True]
     
     #Line Feautures
+    #Standard Deviation
     #extract samples from arteries
-    arteries_samples_line_features = image.compute_line_features[image.arteries_skeleton == True]
+    arteries_samples_std_image = image.std_image[image.arteries_skeleton == True]
     #extract samples from veins
-    veins_samples_line_features = image.compute_line_features[image.veins_skeleton == True]
+    veins_samples_std_image = image.std_image[image.veins_skeleton == True]
+    #Skewness
+    #extract samples from arteries
+    arteries_samples_line_skewness = image.line_skewness[image.arteries_skeleton == True]
+    #extract samples from veins
+    veins_samples_line_skewness = image.line_skewness[image.veins_skeleton == True]
+    #Kurtosis
+    arteries_samples_line_kurtosis = image.line_kurtosis[image.arteries_skeleton == True]
+    #extract samples from veins
+    veins_samples_line_kurtosis = image.line_kurtosis[image.veins_skeleton == True]
     
     #Magnitude Gradient
     # extract samples from arteries
@@ -367,8 +377,10 @@ for i in range(nr_ims):
     X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,53] = arteries_samples_std_value_final_small[random_sample]
     X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,54] = arteries_samples_distance_optic_disk[random_sample]
     X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,55] = arteries_samples_distance_from_image_center[random_sample]
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,56] = arteries_samples_line_features[random_sample]
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,57] = arteries_samples_magnitude_gradient[random_sample]
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,56] = arteries_samples_std_image[random_sample]
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,57] = arteries_samples_line_skewness[random_sample]
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,58] = arteries_samples_line_kurtosis[random_sample]
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,59] = arteries_samples_magnitude_gradient[random_sample]
        
     # arteries are the negative class
     y[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image] = np.zeros(nr_artery_samples_per_image,)  
@@ -434,8 +446,10 @@ for i in range(nr_ims):
     X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,53] = veins_samples_std_value_final_small[random_sample]
     X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,54] = veins_samples_distance_optic_disk[random_sample]
     X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,55] = veins_samples_distance_from_image_center[random_sample]
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,56] = veins_samples_line_features[random_sample]
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,57] = veins_samples_magnitude_gradient[random_sample]
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,56] = veins_samples_std_image[random_sample]
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,56] = veins_samples_line_skewness[random_sample]
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,56] = veins_samples_line_kurtosis[random_sample]
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,59] = veins_samples_magnitude_gradient[random_sample]
     
     # veins are the positive class
     y[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image] = np.ones(nr_vein_samples_per_image,)  
