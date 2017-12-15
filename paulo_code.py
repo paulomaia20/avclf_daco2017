@@ -33,26 +33,26 @@ image_vessels=image_object.vessels
 plotFlag=0
     
     # perform skeletonization
-skeleton=apply_skeleton.apply_skeleton(image_vessels,plotFlag)
+#skeleton=apply_skeleton.apply_skeleton(image_vessels,plotFlag)
     
     #Find interest points
-coordinates=find_interestpoints.find_interestpoints(skeleton,plotFlag)
+#coordinates=find_interestpoints.find_interestpoints(skeleton,plotFlag)
     
     #Divide into segments
-labels = divideIntoSegments.divideIntoSegments(skeleton, coordinates,plotFlag)
+#labels = divideIntoSegments.divideIntoSegments(skeleton, coordinates,plotFlag)
     
     #Homomorphic filtering to reduce 
-img_rgb=apply_homomorphic_filtering.apply_homomorphic_filtering(image_object,img_rgb,plotFlag)
+#img_rgb=apply_homomorphic_filtering.apply_homomorphic_filtering(image_object,img_rgb,plotFlag)
     
     #Detect optic disk
-img_gray=cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)   
+#img_gray=cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)   
    
 
-y_disk, x_disk = detectOpticDisk.detectOpticDisk(image_object.image[:,:,1],plotFlag)
+#y_disk, x_disk = detectOpticDisk.detectOpticDisk(image_object.image[:,:,1],plotFlag)
     
 from skimage.measure import regionprops
     
-regions=regionprops(labels)
+regions=regionprops(image_object.labels)
 import math
     
 orientations_image=np.zeros((img_rgb.shape[0],img_rgb.shape[1]))
@@ -61,14 +61,14 @@ from skimage.draw import line_aa
 
 from scipy import ndimage
 distanceTransform=ndimage.distance_transform_edt(image_vessels)
-diameter=distanceTransform * skeleton
-meanDiameterInRegion=np.zeros(np.max(labels))
+diameter=distanceTransform * image_object.skeleton
+meanDiameterInRegion=np.zeros(np.max(image_object.labels))
 
 for props in regions:
     i=i+1; 
     y0, x0 = props.centroid
     orientation = props.orientation
-    orientations_image[labels==i]=orientation; 
+    orientations_image[image_object.labels==i]=orientation; 
     x1 = x0 + math.cos(orientation) * 0.5 * props.major_axis_length
     y1 = y0 - math.sin(orientation) * 0.5 * props.major_axis_length
     x3 = x0 + math.cos(math.pi/2 + orientation)*0.5*props.major_axis_length;
@@ -87,7 +87,7 @@ for props in regions:
 #    plt.scatter(x=rr,y=cc,c='b',s=20,marker='x') 
 #    plt.scatter(x=coordinates[1],y=coordinates[0],c='g',s=20,marker='o')
 #    plt.show()
-    meanDiameterInRegion[i-1]=np.mean(diameter[labels==(i)])
+    meanDiameterInRegion[i-1]=np.mean(diameter[image_object.labels==(i)])
     
 
 

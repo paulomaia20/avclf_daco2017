@@ -381,12 +381,14 @@ def compute_line_features(retinal_image):
     line_skewness = np.zeros((retinal_image.preprocessed_image.shape[0], retinal_image.preprocessed_image.shape[1]))
     std_image=np.zeros((retinal_image.preprocessed_image.shape[0], retinal_image.preprocessed_image.shape[1]))
     tempImg=np.zeros((retinal_image.preprocessed_image.shape[0],retinal_image.preprocessed_image.shape[1]))
+    orientations_image=np.zeros((retinal_image.preprocessed_image.shape[0],retinal_image.preprocessed_image.shape[1]))
+
     i=0
-    for props in regions:
+    for props in retinal_image.regions:
         i=i+1
         y0, x0 = props.centroid
         orientation = props.orientation
-        orientations_image[labels==i]=orientation;
+        orientations_image[retinal_image.labels==i]=orientation;
         x1 = x0 + math.cos(orientation) * 0.5 * props.major_axis_length
         y1 = y0 - math.sin(orientation) * 0.5 * props.major_axis_length
         x3 = x0 + math.cos(math.pi/2 + orientation)*0.5*props.major_axis_length;
@@ -402,18 +404,18 @@ def compute_line_features(retinal_image):
         
         #Line Standard Deviation
         if math.isnan(np.std(retinal_image.preprocessed_image[region==True])):
-            std_image[labels==i] = 0
+            std_image[retinal_image.labels==i] = 0
         else:
-            std_image[labels==i] = np.std(retinal_image.preprocessed_image[region==True])
+            std_image[retinal_image.labels==i] = np.std(retinal_image.preprocessed_image[region==True])
            
         #Line Skewness
-        line_skewness[labels==i] = skew(retinal_image.preprocessed_image[region==True])
+        line_skewness[retinal_image.labels==i] = skew(retinal_image.preprocessed_image[region==True])
         
         #Line Kurtosis
-        line_kurtosis[labels==i] = kurtosis(retinal_image.preprocessed_image[region==True])
+        line_kurtosis[retinal_image.labels==i] = kurtosis(retinal_image.preprocessed_image[region==True])
         
         #Line Mean
-        line_mean[labels==i] = np.mean(retinal.preprocessed_image[region==True])
+        line_mean[retinal_image.labels==i] = np.mean(retinal_image.preprocessed_image[region==True])
         
     
     return std_image, line_skewness, line_kurtosis, line_mean
