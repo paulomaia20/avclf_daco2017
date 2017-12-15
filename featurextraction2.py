@@ -11,7 +11,7 @@ import retinal_image as ri
 path_to_training_retinal_ims = 'data/training/images/'
 retinal_im_list = os.listdir(path_to_training_retinal_ims)
 nr_ims = len(retinal_im_list) # same as above
-nr_features = 20 # red intensity and saturation, ... 
+nr_features = 75 # red intensity and saturation, ... 
 
 # the number of samples depends on the number of vessel pixels we select (WHICH NUMBER SHOULD WE USE??)
 nr_artery_samples_per_image = 300
@@ -386,7 +386,7 @@ for i in range(nr_ims):
     # randomly choose which artery examples to use, 1st column for red, 2nd for green, 3rd for blue, 4th for hue, 5th for saturation and 6th for value
     random_sample = np.random.randint(len(arteries_samples_maximum_value_large), size=nr_artery_samples_per_image)
 
-    # first 61 examples are arteries
+    # first 75 examples are arteries
     X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,0] = arteries_samples_red_intensity[random_sample]
     X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,1] = arteries_samples_green_intensity[random_sample]
     X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,2] = arteries_samples_blue_intensity[random_sample]
@@ -468,7 +468,7 @@ for i in range(nr_ims):
     # randomly choose which vein examples to use                                          
     random_sample = np.random.randint(len(veins_samples_maximum_value_large), size=nr_vein_samples_per_image)
     
-    # second 60 examples are veins
+    # second 75 examples are veins
        
     X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,0] = veins_samples_red_intensity[random_sample]
     X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,1] = veins_samples_green_intensity[random_sample]
