@@ -20,6 +20,9 @@ from scipy.stats import kurtosis
 import cv2
 import math
 from skimage.draw import line_aa
+from skimage.measure import shannon_entropy
+from skimage.feature import greycomatrix
+from skimage.feature import greycoprops
 
 path_to_training_retinal_ims = 'data/training/images/'
 path_to_training_retinal_masks = 'data/training/masks/'
@@ -174,6 +177,26 @@ def compute_local_features(retinal_image):
     mean_saturation_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     mean_value_1=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     mean_value_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    
+    #GLCM Features Large Diameter
+    glcm_image_entropy_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    glcm_image_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    glcm_image_contrast_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    glcm_image_dissimilarity_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    glcm_image_homogeneity_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    glcm_image_energy_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    glcm_image_correlation_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    glcm_image_ASM_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    
+    #GLCM Features Small Diameter
+    glcm_image_entropy_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    glcm_image_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    glcm_image_contrast_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    glcm_image_dissimilarity_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    glcm_image_homogeneity_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    glcm_image_energy_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    glcm_image_correlation_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    glcm_image_ASM_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     
     
     max_labels=np.amax(retinal_image.labels)
@@ -370,6 +393,28 @@ def compute_local_features(retinal_image):
         std_value_small =mean_value_potency-mean_value_1
         std_value_small = np.abs(std_value_small)
         std_value_final_small = np.sqrt(std_value_small)
+        
+        #GLCM Features Large Diameter
+        glcm_image_entropy_large_iteration = shannon_entropy(retinal_image.preprocessed_image, disk(disk_diameter_large))
+        glcm_image_entropy_large[rows,cols] = glcm_image_entropy_large_iteration[rows,cols]
+        #This creates the GLCM local matrix which is arg of the functions under:
+        glcm_image_large[rows,cols] = 
+        glcm_image_contrast_large[rows,cols] = 
+        glcm_image_dissimilarity_large[rows,cols] = 
+        glcm_image_homogeneity_large[rows,cols] = 
+        glcm_image_energy_large[rows,cols] = 
+        glcm_image_correlation_large[rows,cols] = 
+        glcm_image_ASM_large[rows,cols] = 
+        
+        #GLCM Features Small Diameter
+        glcm_image_entropy_small[rows,cols] = 
+        glcm_image_small[rows,cols] = 
+        glcm_image_contrast_small[rows,cols] = 
+        glcm_image_dissimilarity_small[rows,cols] = 
+        glcm_image_homogeneity_small[rows,cols] = 
+        glcm_image_energy_small[rows,cols] = 
+        glcm_image_correlation_small[rows,cols] = 
+        glcm_image_ASM_small[rows,cols] = 
        
         #print(mean_intensity)
         print(i, ':',disk_diameter)
