@@ -398,28 +398,29 @@ def compute_local_features(retinal_image):
         glcm_image_entropy_large_iteration = shannon_entropy(retinal_image.preprocessed_image, disk(disk_diameter_large))
         glcm_image_entropy_large[rows,cols] = glcm_image_entropy_large_iteration[rows,cols]
         #This creates the GLCM local matrix which is arg of the functions under:
-        glcm_image_large[rows,cols] = 
-        glcm_image_contrast_large[rows,cols] = 
-        glcm_image_dissimilarity_large[rows,cols] = 
-        glcm_image_homogeneity_large[rows,cols] = 
-        glcm_image_energy_large[rows,cols] = 
-        glcm_image_correlation_large[rows,cols] = 
-        glcm_image_ASM_large[rows,cols] = 
+        glcm_image_iteration_large = greycomatrix(retinal_image.preprocessed_image, disk(disk_diameter_large))
+        glcm_image_contrast_large[rows,cols] = greycoprops( glcm_image_iteration_large, 'contrast')
+        glcm_image_dissimilarity_large[rows,cols] =  greycoprops(glcm_image_iteration_large, 'dissimilarity')
+        glcm_image_homogeneity_large[rows,cols] = greycoprops(glcm_image_iteration_large, 'homogeneity')
+        glcm_image_energy_large[rows,cols] = greycoprops(glcm_image_iteration_large, 'energy')
+        glcm_image_correlation_large[rows,cols] = greycoprops(glcm_image_iteration_large, 'correlation')
+        glcm_image_ASM_large[rows,cols] = greycoprops(glcm_image_iteration_large, 'ASM')
         
         #GLCM Features Small Diameter
-        glcm_image_entropy_small[rows,cols] = 
-        glcm_image_small[rows,cols] = 
-        glcm_image_contrast_small[rows,cols] = 
-        glcm_image_dissimilarity_small[rows,cols] = 
-        glcm_image_homogeneity_small[rows,cols] = 
-        glcm_image_energy_small[rows,cols] = 
-        glcm_image_correlation_small[rows,cols] = 
-        glcm_image_ASM_small[rows,cols] = 
+        glcm_image_entropy_small_iteration = shannon_entropy(retinal_image.preprocessed_image, disk(disk_diameter))
+        glcm_image_entropy_small[rows,cols] = glcm_image_entropy_small_iteration[rows,cols]
+        glcm_image_iteration_small = greycomatrix(retinal_image.preprocessed_image, disk(disk_diameter))
+        glcm_image_contrast_small[rows,cols] = greycoprops( glcm_image_iteration_small, 'contrast')
+        glcm_image_dissimilarity_small[rows,cols] = greycoprops(glcm_image_iteration_small, 'dissimilarity')
+        glcm_image_homogeneity_small[rows,cols] = greycoprops(glcm_image_iteration_small, 'homogeneity')
+        glcm_image_energy_small[rows,cols] =  greycoprops(glcm_image_iteration_small, 'energy')
+        glcm_image_correlation_small[rows,cols] = greycoprops(glcm_image_iteration_small, 'correlation')
+        glcm_image_ASM_small[rows,cols] = greycoprops(glcm_image_iteration_small, 'ASM')
        
         #print(mean_intensity)
         print(i, ':',disk_diameter)
-    return mean_red_intensity_large, mean_green_intensity_large, mean_blue_intensity_large, mean_hue_large, mean_saturation_large, mean_value_large, mean_red_intensity, mean_green_intensity, mean_blue_intensity, mean_hue, mean_saturation, mean_value, minimum_red_intensity_large, minimum_green_intensity_large, minimum_blue_intensity_large, minimum_hue_large, minimum_saturation_large, minimum_value_large, minimum_red_intensity, minimum_green_intensity, minimum_blue_intensity, minimum_hue, minimum_saturation, minimum_value, maximum_red_intensity_large, maximum_green_intensity_large, maximum_blue_intensity_large, maximum_hue_large, maximum_saturation_large, maximum_value_large, maximum_red_intensity, maximum_green_intensity, maximum_blue_intensity, maximum_hue, maximum_saturation, maximum_value, std_red_final, std_green_final, std_blue_final, std_hue_final, std_saturation_final, std_value_final, std_red_final_small, std_green_final_small, std_blue_final_small, std_hue_final_small, std_saturation_final_small, std_value_final_small
-    
+    return mean_red_intensity_large, mean_green_intensity_large, mean_blue_intensity_large, mean_hue_large, mean_saturation_large, mean_value_large, mean_red_intensity, mean_green_intensity, mean_blue_intensity, mean_hue, mean_saturation, mean_value, minimum_red_intensity_large, minimum_green_intensity_large, minimum_blue_intensity_large, minimum_hue_large, minimum_saturation_large, minimum_value_large, minimum_red_intensity, minimum_green_intensity, minimum_blue_intensity, minimum_hue, minimum_saturation, minimum_value, maximum_red_intensity_large, maximum_green_intensity_large, maximum_blue_intensity_large, maximum_hue_large, maximum_saturation_large, maximum_value_large, maximum_red_intensity, maximum_green_intensity, maximum_blue_intensity, maximum_hue, maximum_saturation, maximum_value, std_red_final, std_green_final, std_blue_final, std_hue_final, std_saturation_final, std_value_final, std_red_final_small, std_green_final_small, std_blue_final_small, std_hue_final_small, std_saturation_final_small, std_value_final_small,glcm_image_entropy_large, glcm_image_contrast_large, glcm_image_dissimilarity_large, glcm_image_homogeneity_large, glcm_image_energy_large, glcm_image_correlation_large, glcm_image_ASM_large, glcm_image_entropy_small, glcm_image_contrast_small, glcm_image_dissimilarity_small, glcm_image_homogeneity_small, glcm_image_energy_small, glcm_image_correlation_small, glcm_image_ASM_small   
+
 def compute_line_features(retinal_image):
     line_mean = np.zeros((retinal_image.preprocessed_image.shape[0], retinal_image.preprocessed_image.shape[1]))
     line_kurtosis = np.zeros((retinal_image.preprocessed_image.shape[0], retinal_image.preprocessed_image.shape[1]))
