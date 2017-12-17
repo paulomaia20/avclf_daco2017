@@ -60,4 +60,4 @@ def apply_homomorphic_filtering(mask, img_rgb, plotFlag):
     if (plotFlag==1):    
         cv2.imshow('Homomorphic Filtered RGB Image', imgRGB)
 
-    return imgRGB
+    return imgRGB/(np.max(imgRGB))
