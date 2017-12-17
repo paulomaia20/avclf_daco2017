@@ -455,13 +455,12 @@ for i in range(nr_ims):
     X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,65] = arteries_samples_glcm_image_energy_large[random_sample]
     X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,66] = arteries_samples_glcm_image_correlation_large[random_sample]
     X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,67] = arteries_samples_glcm_image_ASM_large[random_sample]
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,68] = arteries_samples_glcm_image_entropy_small[random_sample]
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,69] = arteries_samples_glcm_image_contrast_small[random_sample]
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,70] = arteries_samples_glcm_image_dissimilarity_small[random_sample]
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,71] = arteries_samples_glcm_image_homogeneity_small[random_sample]
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,72] = arteries_samples_glcm_image_energy_small[random_sample]
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,73] = arteries_samples_glcm_image_correlation_small[random_sample]
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,74] = arteries_samples_glcm_image_ASM_small[random_sample]
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,68] = arteries_samples_glcm_image_contrast_small[random_sample]
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,69] = arteries_samples_glcm_image_dissimilarity_small[random_sample]
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,70] = arteries_samples_glcm_image_homogeneity_small[random_sample]
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,71] = arteries_samples_glcm_image_energy_small[random_sample]
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,72] = arteries_samples_glcm_image_correlation_small[random_sample]
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,73] = arteries_samples_glcm_image_ASM_small[random_sample]
     # arteries are the negative class
     y[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image] = np.zeros(nr_artery_samples_per_image,)  
     
@@ -538,13 +537,12 @@ for i in range(nr_ims):
     X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,65] = veins_samples_glcm_image_energy_large[random_sample]
     X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,66] = veins_samples_glcm_image_correlation_large[random_sample]
     X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,67] = veins_samples_glcm_image_ASM_large[random_sample]
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,68] = veins_samples_glcm_image_entropy_small[random_sample]
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,69] = veins_samples_glcm_image_contrast_small[random_sample]
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,70] = veins_samples_glcm_image_dissimilarity_small[random_sample]
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,71] = veins_samples_glcm_image_homogeneity_small[random_sample]
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,72] = veins_samples_glcm_image_energy_small[random_sample]
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,73] = veins_samples_glcm_image_correlation_small[random_sample]
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,74] = veins_samples_glcm_image_ASM_small[random_sample]    
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,68] = veins_samples_glcm_image_contrast_small[random_sample]
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,69] = veins_samples_glcm_image_dissimilarity_small[random_sample]
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,70] = veins_samples_glcm_image_homogeneity_small[random_sample]
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,71] = veins_samples_glcm_image_energy_small[random_sample]
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,72] = veins_samples_glcm_image_correlation_small[random_sample]
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,73] = veins_samples_glcm_image_ASM_small[random_sample]    
     # veins are the positive class
     y[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image] = np.ones(nr_vein_samples_per_image,)  
     
