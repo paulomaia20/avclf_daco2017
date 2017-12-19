@@ -448,9 +448,18 @@ for i in range(nr_ims):
     X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,58] = arteries_samples_line_kurtosis[random_sample]
     X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,59] = arteries_samples_line_mean[random_sample]
     #We have to save the value of the gradient of each channel.
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,60] = arteries_samples_magnitude_gradient[:,0][random_sample]
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,61] = arteries_samples_magnitude_gradient[:,1][random_sample]
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,62] = arteries_samples_magnitude_gradient[:,2][random_sample]
+    #Compute Maximum of each channel
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,60] = np.amax(arteries_samples_magnitude_gradient[:,0][random_sample])
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,61] = np.amax(arteries_samples_magnitude_gradient[:,1][random_sample])
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,62] = np.amax(arteries_samples_magnitude_gradient[:,2][random_sample])
+    #Compute Minimum of each channel
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,63] = np.amin(arteries_samples_magnitude_gradient[:,0][random_sample])
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,64] = np.amin(arteries_samples_magnitude_gradient[:,1][random_sample])
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,65] = np.amin(arteries_samples_magnitude_gradient[:,2][random_sample])
+    #Compute Mean of each channel
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,66] = np.mean(arteries_samples_magnitude_gradient[:,0][random_sample])
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,67] = np.mean(arteries_samples_magnitude_gradient[:,1][random_sample])
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,68] = np.mean(arteries_samples_magnitude_gradient[:,2][random_sample])
     #    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,61] = arteries_samples_glcm_image_entropy_large[random_sample]
     #    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,62] = arteries_samples_glcm_image_contrast_large[random_sample]
     #    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,63] = arteries_samples_glcm_image_dissimilarity_large[random_sample]
@@ -533,9 +542,18 @@ for i in range(nr_ims):
     X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,58] = veins_samples_line_kurtosis[random_sample]
     X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,59] = veins_samples_line_mean[random_sample]
     #We have to save the value of the gradient of each channel.
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,60] = veins_samples_magnitude_gradient[:,0][random_sample]
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,61] = veins_samples_magnitude_gradient[:,1][random_sample]
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,62] = veins_samples_magnitude_gradient[:,2][random_sample]
+    #Compute Maximum of each channel
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,60] = np.amax(veins_samples_magnitude_gradient[:,0][random_sample])
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,61] = np.amax(veins_samples_magnitude_gradient[:,1][random_sample])
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,62] = np.amax(veins_samples_magnitude_gradient[:,2][random_sample])
+    #Compute Minimum of each channel
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,63] = np.amin(veins_samples_magnitude_gradient[:,0][random_sample])
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,64] = np.amin(veins_samples_magnitude_gradient[:,1][random_sample])
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,65] = np.amin(veins_samples_magnitude_gradient[:,2][random_sample])
+    #Compute Mean of each channel
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,66] = np.mean(veins_samples_magnitude_gradient[:,0][random_sample])
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,67] = np.mean(veins_samples_magnitude_gradient[:,1][random_sample])
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,68] = np.mean(veins_samples_magnitude_gradient[:,2][random_sample])
     #    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,61] = veins_samples_glcm_image_entropy_large[random_sample]
     #    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,62] = veins_samples_glcm_image_contrast_large[random_sample]
     #    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,63] = veins_samples_glcm_image_dissimilarity_large[random_sample]
