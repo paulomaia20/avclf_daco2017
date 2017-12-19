@@ -11,7 +11,7 @@ import retinal_image as ri
 path_to_training_retinal_ims = 'data/training/images/'
 retinal_im_list = os.listdir(path_to_training_retinal_ims)
 nr_ims = len(retinal_im_list) # same as above
-nr_features = 63 # red intensity and saturation, ... 
+nr_features = 69 # red intensity and saturation, ... 
 
 # the number of samples depends on the number of vessel pixels we select (WHICH NUMBER SHOULD WE USE??)
 nr_artery_samples_per_image = 300
