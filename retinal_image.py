@@ -29,6 +29,11 @@ path_to_training_retinal_masks = 'data/training/masks/'
 path_to_training_retinal_vessels = 'data/training/vessels/'
 path_to_training_arteries = 'data/training/arteries/'
 path_to_training_veins = 'data/training/veins/'
+path_to_test_retinal_ims = 'data/test/images/'
+path_to_test_retinal_masks = 'data/test/masks/'
+path_to_test_retinal_vessels = 'data/test/vessels/'
+path_to_test_arteries = 'data/test/arteries/'
+path_to_test_veins = 'data/test/veins/'
 
 # FEATURE EXTRACTION
 
@@ -97,7 +102,7 @@ def compute_distance_to_optic_disk(retinal_image):
 
 def compute_distance_from_image_center(retinal_image):
     distances_image=np.ones((retinal_image.image.shape[0],retinal_image.image.shape[1]))
-    distances_image[int(retinal_image.image.image.shape[1]/2),int(retinal_image.image.shape[0]/2)]=0; 
+    distances_image[int(retinal_image.image.shape[1]/2),int(retinal_image.image.shape[0]/2)]=0; 
     #distance transform gives distance from white pixels to black pixels
     distanceFromImageCenter=ndimage.distance_transform_edt(distances_image)
     return distanceFromImageCenter
@@ -109,6 +114,7 @@ def compute_local_features(retinal_image):
     hue_channel=color.rgb2hsv(retinal_image.preprocessed_image)[:,:,0]
     saturation_channel=color.rgb2hsv(retinal_image.preprocessed_image)[:,:,1]
     value_channel=color.rgb2hsv(retinal_image.preprocessed_image)[:,:,2]
+    gray_level_image = color.rgb2gray(retinal_image.preprocessed_image)
     #mean- large
     mean_red_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     mean_blue_intensity_large=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
@@ -177,26 +183,29 @@ def compute_local_features(retinal_image):
     mean_saturation_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     mean_value_1=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     mean_value_potency=np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+    #GCLM Feature (Line Entropy)
+    glcm_temp_image_entropy = np.ones((retinal_image.labels.shape[0],retinal_image.labels.shape[1]))
+    glcm_image_line_entropy = np.zeros((retinal_image.labels.shape[0],retinal_image.labels.shape[1]))
     
     #GLCM Features Large Diameter
-    glcm_image_entropy_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    glcm_image_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    glcm_image_contrast_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    glcm_image_dissimilarity_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    glcm_image_homogeneity_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    glcm_image_energy_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    glcm_image_correlation_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    glcm_image_ASM_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+#    glcm_image_entropy_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+#    glcm_image_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+#    glcm_image_contrast_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+#    glcm_image_dissimilarity_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+#    glcm_image_homogeneity_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+#    glcm_image_energy_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+#    glcm_image_correlation_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+#    glcm_image_ASM_large = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     
     #GLCM Features Small Diameter
-    glcm_image_entropy_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    glcm_image_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    glcm_image_contrast_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    glcm_image_dissimilarity_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    glcm_image_homogeneity_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    glcm_image_energy_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    glcm_image_correlation_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
-    glcm_image_ASM_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+#    glcm_image_entropy_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+#    glcm_image_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+#    glcm_image_contrast_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+#    glcm_image_dissimilarity_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+#    glcm_image_homogeneity_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+#    glcm_image_energy_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+#    glcm_image_correlation_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
+#    glcm_image_ASM_small = np.zeros((retinal_image.labels.shape[0], retinal_image.labels.shape[1]))
     
     
     max_labels=np.amax(retinal_image.labels)
@@ -394,50 +403,58 @@ def compute_local_features(retinal_image):
         std_value_small = np.abs(std_value_small)
         std_value_final_small = np.sqrt(std_value_small)
         
-        #This creates the GLCM local matrix which is arg of the functions under:
-        glcm_image_iteration_large = greycomatrix((retinal_image.preprocessed_image, disk_diameter_large, [1],[0]))
-        glcm_image_iteration_small = greycomatrix((retinal_image.preprocessed_image, disk_diameter), [1],[0])
-
-        #Contrast
-        glcm_image_contrast_large_iteration = mean(greycoprops(glcm_image_iteration_large, 'contrast'), disk(disk_diameter_large))
-        glcm_image_contrast_large[rows,cols] = glcm_image_contrast_large_iteration[rows,cols]
-        glcm_image_contrast_small_iteration = mean(greycoprops( glcm_image_iteration_small, 'contrast'), disk(disk_diameter))
-        glcm_image_contrast_small[rows,cols] = glcm_image_contrast_small_iteration[rows,cols]
-        
-        #Dissimilarity
-        glcm_image_dissimilarity_large_iteration = mean(greycoprops(glcm_image_iteration_large, 'dissimilarity'), disk(disk_diameter_large))
-        glcm_image_dissimilarity_large[rows,cols] = glcm_image_dissimilarity_large_iteration[rows,cols]
-        glcm_image_dissimilarity_small_iteration = mean(greycoprops( glcm_image_iteration_small, 'dissimilarity'), disk(disk_diameter))
-        glcm_image_dissimilarity_small[rows,cols] = glcm_image_dissimilarity_small_iteration[rows,cols]
-
-        #Homogeneity
-        glcm_image_homogeneity_large_iteration = mean(greycoprops(glcm_image_iteration_large, 'homogeneity'), disk(disk_diameter_large))
-        glcm_image_homogeneity_large[rows,cols] = glcm_image_homogeneity_large_iteration[rows,cols]
-        glcm_image_homogeneity_small_iteration = mean(greycoprops( glcm_image_iteration_small, 'homogeneity'), disk(disk_diameter))
-        glcm_image_homogeneity_small[rows,cols] = glcm_image_homogeneity_small_iteration[rows,cols]
-
-        #Energy
-        glcm_image_energy_large_iteration = mean(greycoprops(glcm_image_iteration_large, 'energy'), disk(disk_diameter_large))
-        glcm_image_energy_large[rows,cols] = glcm_image_energy_large_iteration[rows,cols]
-        glcm_image_energy_small_iteration = mean(greycoprops( glcm_image_iteration_small, 'energy'), disk(disk_diameter))
-        glcm_image_energy_small[rows,cols] = glcm_image_energy_small_iteration[rows,cols]
-        
-        #Correlation
-        glcm_image_correlation_large_iteration = mean(greycoprops(glcm_image_iteration_large, 'correlation'), disk(disk_diameter_large))
-        glcm_image_correlation_large[rows,cols] = glcm_image_correlation_large_iteration[rows,cols]
-        glcm_image_correlation_small_iteration = mean(greycoprops(glcm_image_iteration_small, 'correlation'), disk(disk_diameter))
-        glcm_image_correlation_small[rows,cols] = glcm_image_correlation_small_iteration[rows,cols]
-        
-        #ASM
-        glcm_image_ASM_large_iteration = mean(greycoprops(glcm_image_iteration_large, 'ASM'), disk(disk_diameter_large))
-        glcm_image_ASM_large[rows,cols] = glcm_image_ASM_large_iteration[rows,cols]
-        glcm_image_ASM_small_iteration = mean(greycoprops(glcm_image_iteration_small, 'ASM'), disk(disk_diameter))
-        glcm_image_ASM_small[rows,cols] = glcm_image_ASM_small_iteration[rows,cols]
+        #Run GLCM Feauture (Entropy) in the label
+        #Line Entropy
+        #It must be calculated by loading the imagem in grayscale: astype(np.float64)
+#        glcm_image_line_entropy_iteration = shannon_entropy(gray_level_image[rows, cols])
+#        glcm_temp_image_entropy = glcm_temp_image_entropy*glcm_image_line_entropy_iteration
+#        glcm_image_line_entropy[rows, cols] = glcm_temp_image_entropy[rows, cols]
+#        
+#        #This creates the GLCM local matrix which is arg of the functions under:
+#        glcm_image_iteration_large = greycomatrix((retinal_image.preprocessed_image, disk_diameter_large, [1],[0]))
+#        glcm_image_iteration_small = greycomatrix((retinal_image.preprocessed_image, disk_diameter), [1],[0])
+#
+#        #Contrast
+#        glcm_image_contrast_large_iteration = mean(greycoprops(glcm_image_iteration_large, 'contrast'), disk(disk_diameter_large))
+#        glcm_image_contrast_large[rows,cols] = glcm_image_contrast_large_iteration[rows,cols]
+#        glcm_image_contrast_small_iteration = mean(greycoprops( glcm_image_iteration_small, 'contrast'), disk(disk_diameter))
+#        glcm_image_contrast_small[rows,cols] = glcm_image_contrast_small_iteration[rows,cols]
+#        
+#        #Dissimilarity
+#        glcm_image_dissimilarity_large_iteration = mean(greycoprops(glcm_image_iteration_large, 'dissimilarity'), disk(disk_diameter_large))
+#        glcm_image_dissimilarity_large[rows,cols] = glcm_image_dissimilarity_large_iteration[rows,cols]
+#        glcm_image_dissimilarity_small_iteration = mean(greycoprops( glcm_image_iteration_small, 'dissimilarity'), disk(disk_diameter))
+#        glcm_image_dissimilarity_small[rows,cols] = glcm_image_dissimilarity_small_iteration[rows,cols]
+#
+#        #Homogeneity
+#        glcm_image_homogeneity_large_iteration = mean(greycoprops(glcm_image_iteration_large, 'homogeneity'), disk(disk_diameter_large))
+#        glcm_image_homogeneity_large[rows,cols] = glcm_image_homogeneity_large_iteration[rows,cols]
+#        glcm_image_homogeneity_small_iteration = mean(greycoprops( glcm_image_iteration_small, 'homogeneity'), disk(disk_diameter))
+#        glcm_image_homogeneity_small[rows,cols] = glcm_image_homogeneity_small_iteration[rows,cols]
+#
+#        #Energy
+#        glcm_image_energy_large_iteration = mean(greycoprops(glcm_image_iteration_large, 'energy'), disk(disk_diameter_large))
+#        glcm_image_energy_large[rows,cols] = glcm_image_energy_large_iteration[rows,cols]
+#        glcm_image_energy_small_iteration = mean(greycoprops( glcm_image_iteration_small, 'energy'), disk(disk_diameter))
+#        glcm_image_energy_small[rows,cols] = glcm_image_energy_small_iteration[rows,cols]
+#        
+#        #Correlation
+#        glcm_image_correlation_large_iteration = mean(greycoprops(glcm_image_iteration_large, 'correlation'), disk(disk_diameter_large))
+#        glcm_image_correlation_large[rows,cols] = glcm_image_correlation_large_iteration[rows,cols]
+#        glcm_image_correlation_small_iteration = mean(greycoprops(glcm_image_iteration_small, 'correlation'), disk(disk_diameter))
+#        glcm_image_correlation_small[rows,cols] = glcm_image_correlation_small_iteration[rows,cols]
+#        
+#        #ASM
+#        glcm_image_ASM_large_iteration = mean(greycoprops(glcm_image_iteration_large, 'ASM'), disk(disk_diameter_large))
+#        glcm_image_ASM_large[rows,cols] = glcm_image_ASM_large_iteration[rows,cols]
+#        glcm_image_ASM_small_iteration = mean(greycoprops(glcm_image_iteration_small, 'ASM'), disk(disk_diameter))
+#        glcm_image_ASM_small[rows,cols] = glcm_image_ASM_small_iteration[rows,cols]
         
 
         #print(mean_intensity)
         print(i, ':',disk_diameter)
-    return mean_red_intensity_large, mean_green_intensity_large, mean_blue_intensity_large, mean_hue_large, mean_saturation_large, mean_value_large, mean_red_intensity, mean_green_intensity, mean_blue_intensity, mean_hue, mean_saturation, mean_value, minimum_red_intensity_large, minimum_green_intensity_large, minimum_blue_intensity_large, minimum_hue_large, minimum_saturation_large, minimum_value_large, minimum_red_intensity, minimum_green_intensity, minimum_blue_intensity, minimum_hue, minimum_saturation, minimum_value, maximum_red_intensity_large, maximum_green_intensity_large, maximum_blue_intensity_large, maximum_hue_large, maximum_saturation_large, maximum_value_large, maximum_red_intensity, maximum_green_intensity, maximum_blue_intensity, maximum_hue, maximum_saturation, maximum_value, std_red_final, std_green_final, std_blue_final, std_hue_final, std_saturation_final, std_value_final, std_red_final_small, std_green_final_small, std_blue_final_small, std_hue_final_small, std_saturation_final_small, std_value_final_small, glcm_image_contrast_large, glcm_image_dissimilarity_large, glcm_image_homogeneity_large, glcm_image_energy_large, glcm_image_correlation_large, glcm_image_ASM_large, glcm_image_contrast_small, glcm_image_dissimilarity_small, glcm_image_homogeneity_small, glcm_image_energy_small, glcm_image_correlation_small, glcm_image_ASM_small   
+    return mean_red_intensity_large, mean_green_intensity_large, mean_blue_intensity_large, mean_hue_large, mean_saturation_large, mean_value_large, mean_red_intensity, mean_green_intensity, mean_blue_intensity, mean_hue, mean_saturation, mean_value, minimum_red_intensity_large, minimum_green_intensity_large, minimum_blue_intensity_large, minimum_hue_large, minimum_saturation_large, minimum_value_large, minimum_red_intensity, minimum_green_intensity, minimum_blue_intensity, minimum_hue, minimum_saturation, minimum_value, maximum_red_intensity_large, maximum_green_intensity_large, maximum_blue_intensity_large, maximum_hue_large, maximum_saturation_large, maximum_value_large, maximum_red_intensity, maximum_green_intensity, maximum_blue_intensity, maximum_hue, maximum_saturation, maximum_value, std_red_final, std_green_final, std_blue_final, std_hue_final, std_saturation_final, std_value_final, std_red_final_small, std_green_final_small, std_blue_final_small, std_hue_final_small, std_saturation_final_small, std_value_final_small, glcm_image_line_entropy
+    #glcm_image_contrast_large, glcm_image_dissimilarity_large, glcm_image_homogeneity_large, glcm_image_energy_large, glcm_image_correlation_large, glcm_image_ASM_large, glcm_image_contrast_small, glcm_image_dissimilarity_small, glcm_image_homogeneity_small, glcm_image_energy_small, glcm_image_correlation_small, glcm_image_ASM_small   
 
 def compute_line_features(retinal_image):
     line_mean = np.zeros((retinal_image.preprocessed_image.shape[0], retinal_image.preprocessed_image.shape[1]))
@@ -446,7 +463,6 @@ def compute_line_features(retinal_image):
     std_image=np.zeros((retinal_image.preprocessed_image.shape[0], retinal_image.preprocessed_image.shape[1]))
     tempImg=np.zeros((retinal_image.preprocessed_image.shape[0],retinal_image.preprocessed_image.shape[1]))
     orientations_image=np.zeros((retinal_image.preprocessed_image.shape[0],retinal_image.preprocessed_image.shape[1]))
-    glcm_image_entropy_large = np.zeros((retinal_image.preprocessed_image.shape[0],retinal_image.preprocessed_image.shape[1]))
 
     i=0
     for props in retinal_image.regions:
@@ -463,7 +479,8 @@ def compute_line_features(retinal_image):
         end_x=x0 + math.cos(math.pi/2 + orientation)*0.25*props.major_axis_length;
         end_y=y0 - math.sin(math.pi/2 + orientation) * 0.25 * props.major_axis_length;
         rr, cc, val = line_aa(int(start_x), int(start_y), int(end_x), int(end_y))
-        tempImg[rr, cc]=1
+        #We reduce indexes in order to prevent the line from going outside the boundaries of the image.
+        tempImg[rr-3, cc-3]=1
         thin_perpendicularlines=skeletonize(tempImg)
         region = thin_perpendicularlines*retinal_image.vessels #0s em todos os sitios menos na interseçao
         
@@ -474,19 +491,27 @@ def compute_line_features(retinal_image):
             std_image[retinal_image.labels==i] = np.std(retinal_image.preprocessed_image[region==True])
            
         #Line Skewness
-        line_skewness[retinal_image.labels==i] = skew(retinal_image.preprocessed_image[region==True])
+        if math.isnan(np.max(skew(retinal_image.preprocessed_image[region==True]))):
+            line_skewness[retinal_image.labels==i] = 0
+        else:
+            line_skewness[retinal_image.labels==i] = np.max(skew(retinal_image.preprocessed_image[region==True]))
         
         #Line Kurtosis
-        line_kurtosis[retinal_image.labels==i] = kurtosis(retinal_image.preprocessed_image[region==True])
+        if math.isnan(np.max(kurtosis(retinal_image.preprocessed_image[region==True]))):
+            line_kurtosis[retinal_image.labels==i] = 0
+        else:
+            line_kurtosis[retinal_image.labels==i] = np.max(kurtosis(retinal_image.preprocessed_image[region==True]))
         
         #Line Mean
-        line_mean[retinal_image.labels==i] = np.mean(retinal_image.preprocessed_image[region==True])
+        if math.isnan(np.mean(retinal_image.preprocessed_image[region==True])):
+            line_mean[retinal_image.labels==i] = 0
+        else:
+            line_mean[retinal_image.labels==i] = np.mean(retinal_image.preprocessed_image[region==True])
         
-        #Line Entropy
-        glcm_image_entropy_large[retinal_image.labels==i] = shannon_entropy(retinal_image.preprocessed_image[region==True])
+        
         
     
-    return std_image, line_skewness, line_kurtosis, line_mean, glcm_image_entropy_large
+    return std_image, line_skewness, line_kurtosis, line_mean
     
 
 
@@ -516,28 +541,31 @@ class retinal_image:
             path_arteries = path_to_training_arteries
             path_veins = path_to_training_veins
         elif train_or_test == 'test':
-            path_im = path_to_training_retinal_ims
-            path_mask = path_to_training_retinal_masks
-            path_vessels = path_to_training_retinal_vessels
-            path_arteries = path_to_training_arteries
-            path_veins = path_to_training_veins
+            path_im = path_to_test_retinal_ims
+            path_mask = path_to_test_retinal_masks
+            path_vessels = path_to_test_retinal_vessels
+            path_arteries = path_to_test_arteries
+            path_veins = path_to_test_veins
         else:
             print('Invalid mode')
+            
         denoised_img = denoise_nl_means(img_as_float(io.imread(path_im+name)), h=0.01, multichannel=True)
         self.image=img_as_float(io.imread(path_im+name))
         self.mask = io.imread(path_mask+name[:-4]+'_mask.gif', dtype=bool)
         self.preprocessed_image = apply_homomorphic_filtering.apply_homomorphic_filtering(self.mask,denoised_img,0)
         self.vessels = io.imread(path_vessels+name, dtype=bool) #[:-4]+'.png'
-        self.arteries = io.imread(path_arteries+name, dtype=bool) #[:-4]+'.png'
-        self.veins = io.imread(path_veins+name, dtype=bool) #[:-4]+'.png'
+        if train_or_test == 'train': # this are only available in training
+            self.arteries = io.imread(path_arteries+name, dtype=bool) #[:-4]+'.png'
+            self.veins = io.imread(path_veins+name, dtype=bool) #[:-4]+'.png'
+            self.veins_skeleton=self.skeletonWithoutCrossings*self.veins; 
+            self.arteries_skeleton=self.skeletonWithoutCrossings*self.arteries; 
         self.skeleton = apply_skeleton.apply_skeleton(self.vessels,0)
         self.x_opticdisk,self.y_opticdisk=detectOpticDisk.detectOpticDisk((self.image)[:,:,1],0)
         self.coordinates=find_interestpoints.find_interestpoints(self.skeleton,0)
         self.labels=divideIntoSegments.divideIntoSegments(self.skeleton, self.coordinates,0)
         self.skeletonWithoutCrossings=obtainSkeletonWithoutCrossings.obtainSkeletonWithoutCrossings(self.skeleton,self.coordinates)
         self.regions=regionprops(self.labels)
-        self.veins_skeleton=self.skeletonWithoutCrossings*self.veins; 
-        self.arteries_skeleton=self.skeletonWithoutCrossings*self.arteries; 
+
         
         
         # AVAILABLE FEATURES: These are place-holders for features that you may want to compute out of each image
@@ -602,20 +630,20 @@ class retinal_image:
         self.line_kurtosis = None
         self.line_mean = None
         self.magnitude_gradient = None
-        self.glcm_image_entropy_large = None
-        self.glcm_image_contrast_large = None
-        self.glcm_image_dissimilarity_large = None
-        self.glcm_image_homogeneity_large = None
-        self.glcm_image_energy_large = None
-        self.glcm_image_correlation_large = None
-        self.glcm_image_ASM_large = None
-        self.glcm_image_iteration_small = None 
-        self.glcm_image_contrast_small = None
-        self.glcm_image_dissimilarity_small = None
-        self.glcm_image_homogeneity_small = None
-        self.glcm_image_energy_small = None
-        self.glcm_image_correlation_small = None
-        self.glcm_image_ASM_small = None
+#        self.glcm_image_line_entropy = None
+#        self.glcm_image_contrast_large = None
+#        self.glcm_image_dissimilarity_large = None
+#        self.glcm_image_homogeneity_large = None
+#        self.glcm_image_energy_large = None
+#        self.glcm_image_correlation_large = None
+#        self.glcm_image_ASM_large = None
+#        self.glcm_image_iteration_small = None 
+#        self.glcm_image_contrast_small = None
+#        self.glcm_image_dissimilarity_small = None
+#        self.glcm_image_homogeneity_small = None
+#        self.glcm_image_energy_small = None
+#        self.glcm_image_correlation_small = None
+#        self.glcm_image_ASM_small = None
         
     # The retinal_image object knows how to compute these features. 
     # It does that by calling to the functions defined in the previous cells    
@@ -639,7 +667,8 @@ class retinal_image:
         self.blue_intensity = compute_blue_intensity(self) 
         
     def load_local_features(self):
-        self.mean_red_intensity_large, self.mean_green_intensity_large, self.mean_blue_intensity_large, self.mean_hue_large, self.mean_saturation_large, self.mean_value_large, self.mean_red_intensity, self.mean_green_intensity, self.mean_blue_intensity, self.mean_hue, self.mean_saturation, self.mean_value, self.minimum_red_intensity_large, self.minimum_green_intensity_large, self.minimum_blue_intensity_large, self.minimum_hue_large, self.minimum_saturation_large, self.minimum_value_large, self.minimum_red_intensity, self.minimum_green_intensity, self.minimum_blue_intensity, self.minimum_hue, self.minimum_saturation, self.minimum_value, self.maximum_red_intensity_large, self.maximum_green_intensity_large, self.maximum_blue_intensity_large, self.maximum_hue_large, self.maximum_saturation_large, self.maximum_value_large, self.maximum_red_intensity, self.maximum_green_intensity, self.maximum_blue_intensity, self.maximum_hue, self.maximum_saturation, self.maximum_value, self.std_red_final, self.std_green_final, self.std_blue_final, self.std_hue_final, self.std_saturation_final, self.std_value_final,  self.std_red_final_small, self.std_green_final_small, self.std_blue_final_small, self.std_hue_final_small, self.std_saturation_final_small, self.std_value_final_small, self.glcm_image_contrast_large, self.glcm_image_dissimilarity_large, self.glcm_image_homogeneity_large, self.glcm_image_energy_large, self.glcm_image_correlation_large, self.glcm_image_ASM_large, self.glcm_image_iteration_small, self.glcm_image_contrast_small, self.glcm_image_dissimilarity_small, self.glcm_image_homogeneity_small, self.glcm_image_energy_small, self.glcm_image_correlation_small, self.glcm_image_ASM_small = compute_local_features(self)
+        self.mean_red_intensity_large, self.mean_green_intensity_large, self.mean_blue_intensity_large, self.mean_hue_large, self.mean_saturation_large, self.mean_value_large, self.mean_red_intensity, self.mean_green_intensity, self.mean_blue_intensity, self.mean_hue, self.mean_saturation, self.mean_value, self.minimum_red_intensity_large, self.minimum_green_intensity_large, self.minimum_blue_intensity_large, self.minimum_hue_large, self.minimum_saturation_large, self.minimum_value_large, self.minimum_red_intensity, self.minimum_green_intensity, self.minimum_blue_intensity, self.minimum_hue, self.minimum_saturation, self.minimum_value, self.maximum_red_intensity_large, self.maximum_green_intensity_large, self.maximum_blue_intensity_large, self.maximum_hue_large, self.maximum_saturation_large, self.maximum_value_large, self.maximum_red_intensity, self.maximum_green_intensity, self.maximum_blue_intensity, self.maximum_hue, self.maximum_saturation, self.maximum_value, self.std_red_final, self.std_green_final, self.std_blue_final, self.std_hue_final, self.std_saturation_final, self.std_value_final,  self.std_red_final_small, self.std_green_final_small, self.std_blue_final_small, self.std_hue_final_small, self.std_saturation_final_small, self.std_value_final_small,  self.glcm_image_line_entropy  = compute_local_features(self)
+        #self.glcm_image_contrast_large, self.glcm_image_dissimilarity_large, self.glcm_image_homogeneity_large, self.glcm_image_energy_large, self.glcm_image_correlation_large, self.glcm_image_ASM_large, self.glcm_image_iteration_small, self.glcm_image_contrast_small, self.glcm_image_dissimilarity_small, self.glcm_image_homogeneity_small, self.glcm_image_energy_small, self.glcm_image_correlation_small, self.glcm_image_ASM_small
     
     def load_distance_to_optic_disk(self):
         self.distance_to_optic_disk = compute_distance_to_optic_disk(self)
@@ -648,7 +677,8 @@ class retinal_image:
         self.distance_from_image_center = compute_distance_from_image_center(self)
     
     def load_compute_line_features(self):
-        self.std_image, self.line_skewness, self.line_kurtosis, self.line_mean, self.glcm_image_entropy_large = compute_line_features(self)
+        self.std_image, self.line_skewness, self.line_kurtosis, self.line_mean  = compute_line_features(self)
+        #self.glcm_image_entropy_large
 
     def load_magnitude_gradient(self):
         self.magnitude_gradient = magnitude_gradient(self)
