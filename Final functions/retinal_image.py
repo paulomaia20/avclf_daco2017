@@ -24,6 +24,8 @@ from skimage.draw import line_aa
 from skimage.measure import shannon_entropy
 from skimage.feature import greycomatrix
 from skimage.feature import greycoprops
+import scipy
+from scipy import ndimage
 
 #Paths
 path_to_training_retinal_ims = 'data/training/images/'
@@ -383,33 +385,16 @@ def compute_local_features(retinal_image):
         
         #print(mean_intensity)
         print(i, ':',disk_diameter)
-    return mean_red_intensity_large, mean_green_intensity_large, mean_blue_intensity_large, mean_hue_large, mean_saturation_large, mean_value_large, mean_red_intensity, mean_green_intensity, mean_blue_intensity, mean_hue, mean_saturation, mean_value, minimum_red_intensity_large, minimum_green_intensity_large, minimum_blue_intensity_large, minimum_hue_large, minimum_saturation_large, minimum_value_large, minimum_red_intensity, minimum_green_intensity, minimum_blue_intensity, minimum_hue, minimum_saturation, minimum_value, maximum_red_intensity_large, maximum_green_intensity_large, maximum_blue_intensity_large, maximum_hue_large, maximum_saturation_large, maximum_value_large, maximum_red_intensity, maximum_green_intensity, maximum_blue_intensity, maximum_hue, maximum_saturation, maximum_value, std_red_final, std_green_final, std_blue_final, std_hue_final, std_saturation_final, std_value_final, std_red_final_small, std_green_final_small, std_blue_final_small, std_hue_final_small, std_saturation_final_small, std_value_final_small   
-
-#Function MagnitudeGradient computes Gradient of the Sobel Filters. 
-#Params: img (image to be loaded), kernel (size of the kernel [1, 3, 5, 7])
-def magnitude_gradient(img):
-    # Load the image in grayscale
-    img = img.astype(np.float64)
-    kernel=1
-    #Apply Sobel Filter (this function has a variable Kernel Size)
-    sobelx = cv2.Sobel(img,cv2.CV_64F,1,0,ksize=kernel)
-    sobely = cv2.Sobel(img,cv2.CV_64F,0,1,ksize=kernel)
-    #Get the norm or absolute value
-    dsobelx = np.absolute(sobelx)
-    dsobely = np.absolute(sobely)
-    #Calculate the magnitude of the gradient
-    sm = cv2.magnitude(dsobelx, dsobely)
-    return sm
+    return mean_red_intensity_large, mean_green_intensity_large, mean_blue_intensity_large, mean_hue_large, mean_saturation_large, mean_value_large, mean_red_intensity, mean_green_intensity, mean_blue_intensity, mean_hue, mean_saturation, mean_value, minimum_red_intensity_large, minimum_green_intensity_large, minimum_blue_intensity_large, minimum_hue_large, minimum_saturation_large, minimum_value_large, minimum_red_intensity, minimum_green_intensity, minimum_blue_intensity, minimum_hue, minimum_saturation, minimum_value, maximum_red_intensity_large, maximum_green_intensity_large, maximum_blue_intensity_large, maximum_hue_large, maximum_saturation_large, maximum_value_large, maximum_red_intensity, maximum_green_intensity, maximum_blue_intensity, maximum_hue, maximum_saturation, maximum_value, std_red_final, std_green_final, std_blue_final, std_hue_final, std_saturation_final, std_value_final, std_red_final_small, std_green_final_small, std_blue_final_small, std_hue_final_small, std_saturation_final_small, std_value_final_small
 
 def compute_line_features(retinal_image):
-    line_gradient = np.zeros((retinal_image.preprocessed_image.shape[0], retinal_image.preprocessed_image.shape[1]))
+    #Temporary variables to save values
     line_mean = np.zeros((retinal_image.preprocessed_image.shape[0], retinal_image.preprocessed_image.shape[1]))
     line_kurtosis = np.zeros((retinal_image.preprocessed_image.shape[0], retinal_image.preprocessed_image.shape[1]))
     line_skewness = np.zeros((retinal_image.preprocessed_image.shape[0], retinal_image.preprocessed_image.shape[1]))
     std_image=np.zeros((retinal_image.preprocessed_image.shape[0], retinal_image.preprocessed_image.shape[1]))
     tempImg=np.zeros((retinal_image.preprocessed_image.shape[0],retinal_image.preprocessed_image.shape[1]))
     orientations_image=np.zeros((retinal_image.preprocessed_image.shape[0],retinal_image.preprocessed_image.shape[1]))
-
     i=0
     for props in retinal_image.regions:
         i=i+1
@@ -453,19 +438,15 @@ def compute_line_features(retinal_image):
             line_mean[retinal_image.labels==i] = 0
         else:
             line_mean[retinal_image.labels==i] = np.mean(retinal_image.preprocessed_image[region==True])
-        
-        #Line Mean Gradient
-        line_gradient[retinal_image.labels==i] = magnitude_gradient(retinal_image.preprocessed_image[region==True])
-        
-        
-        
     
-    return std_image, line_skewness, line_kurtosis, line_mean, line_gradient
+        #Restart tempImg
+        tempImg=np.zeros((retinal_image.preprocessed_image.shape[0],retinal_image.preprocessed_image.shape[1]))
+    return std_image, line_skewness, line_kurtosis, line_mean
     
 
 
 
-
+#Class retinal_image
 class retinal_image:   
     def __init__(self, name, train_or_test):
         self.name = name
@@ -565,7 +546,6 @@ class retinal_image:
         self.line_skewness = None
         self.line_kurtosis = None
         self.line_mean = None
-        self.line_gradient = None
         
     # The retinal_image object knows how to compute these features. 
     # It does that by calling to the functions defined in the previous cells    
@@ -598,7 +578,4 @@ class retinal_image:
         self.distance_from_image_center = compute_distance_from_image_center(self)
     
     def load_compute_line_features(self):
-        self.std_image, self.line_skewness, self.line_kurtosis, self.line_mean, self.line_gradient  = compute_line_features(self)
-
-    def load_magnitude_gradient(self):
-        self.magnitude_gradient = magnitude_gradient(self)
+        self.std_image, self.line_skewness, self.line_kurtosis, self.line_mean = compute_line_features(self)
