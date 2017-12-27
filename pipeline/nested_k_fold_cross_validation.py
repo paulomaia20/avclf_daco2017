@@ -27,11 +27,11 @@ from sklearn.model_selection import KFold
 from sklearn.model_selection import StratifiedKFold
 
 # Other pyplearnr classes
-from .folds import Fold, OuterFold
+from folds import Fold, OuterFold
 
-from .trained_pipeline import OuterFoldTrainedPipeline
+from trained_pipeline import OuterFoldTrainedPipeline
 
-from .pipeline_builder import PipelineBuilder
+from pipeline_builder import PipelineBuilder
 
 class NestedKFoldCrossValidation(object):
     """

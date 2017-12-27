@@ -1,6 +1,6 @@
 import numpy as np
 
-from .pipeline_evaluator import PipelineEvaluator
+from pipeline_evaluator import PipelineEvaluator
 
 class TrainedPipeline(object):
     """
