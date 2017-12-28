@@ -99,7 +99,7 @@ def compute_blue_intensity(retinal_image):
  
 def compute_distance_to_optic_disk(retinal_image):
     distances_image=np.ones((retinal_image.image.shape[0],retinal_image.image.shape[1]))
-    distances_image[int(retinal_image.y_opticdisk),int(retinal_image.x_opticdisk)]=0; 
+    distances_image[int(retinal_image.x_opticdisk),int(retinal_image.y_opticdisk)]=0; 
     #distance transform gives distance from white pixels to black pixels
     distanceToOpticDisk=ndimage.distance_transform_edt(distances_image)
     return distanceToOpticDisk
@@ -468,7 +468,8 @@ class retinal_image:
         denoised_img = denoise_nl_means(img_as_float(io.imread(path_im+name)), h=0.01, multichannel=True)
         self.image=img_as_float(io.imread(path_im+name))
         self.mask = io.imread(path_mask+name[:-4]+'_mask.gif', dtype=bool)
-        self.preprocessed_image = apply_homomorphic_filtering.apply_homomorphic_filtering(self.mask,denoised_img,0)
+        #self.preprocessed_image = apply_homomorphic_filtering.apply_homomorphic_filtering(self.mask,denoised_img,0)
+        self.preprocessed_image = self.image
         self.vessels = io.imread(path_vessels+name, dtype=bool) #[:-4]+'.png'
         self.skeleton = apply_skeleton.apply_skeleton(self.vessels,0)
         self.x_opticdisk,self.y_opticdisk=detectOpticDisk.detectOpticDisk((self.image)[:,:,1],0)
