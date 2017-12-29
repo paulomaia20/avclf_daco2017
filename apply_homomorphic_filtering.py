@@ -56,6 +56,7 @@ def apply_homomorphic_filtering(mask, img_rgb, plotFlag):
     result1 = np.dstack((H,S,result_V))
     result1 = np.float32(result1)
     imgRGB = cv2.cvtColor(result1, cv2.COLOR_HSV2RGB)
+    imgRGB = cv2.cvtColor(imgRGB,cv2.COLOR_BGR2RGB) # Será mesmo necessário?
     
     if (plotFlag==1):    
         cv2.imshow('Homomorphic Filtered RGB Image', imgRGB)
