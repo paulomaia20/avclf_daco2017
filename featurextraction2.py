@@ -10,12 +10,13 @@ import retinal_image as ri
 
 path_to_training_retinal_ims = 'data/training/images/'
 retinal_im_list = os.listdir(path_to_training_retinal_ims)
-nr_ims = len(retinal_im_list) # same as above
-nr_features = 69 # red intensity and saturation, ... 
+#nr_ims = len(retinal_im_list) #Number of images in the list provided
+nr_ims = 15 
+nr_features = 61 # red intensity and saturation, ... 
 
 # the number of samples depends on the number of vessel pixels we select (WHICH NUMBER SHOULD WE USE??)
-nr_artery_samples_per_image = 300
-nr_vein_samples_per_image = 300
+nr_artery_samples_per_image = 2500
+nr_vein_samples_per_image = 2500
 # nr of pixel samples is the sum of these
 nr_samples_per_image =  nr_artery_samples_per_image + nr_vein_samples_per_image
 # total number of examples is number of samples per image multiplied by nr of images
@@ -25,9 +26,10 @@ nr_examples = nr_ims *nr_samples_per_image
 X = np.zeros([nr_examples, nr_features])
 # pre-allocate ground-truth vector
 y = np.zeros([nr_examples,])
-    
-for i in range(nr_ims):
-    im_name = retinal_im_list[i]
+
+   
+for i in range(len(fit_img)):
+    im_name = fit_img[i]
     image = ri.retinal_image(im_name, 'train')
     
     # Load features
@@ -41,37 +43,37 @@ for i in range(nr_ims):
     image.load_distance_to_optic_disk()
     image.load_distance_from_image_center()
     image.load_compute_line_features()
-    image.load_magnitude_gradient()
+    image.load_Diameter()
     
     # extract samples from arteries
-    arteries_samples_red_intensity = image.red_intensity[image.arteries == True]
+    arteries_samples_red_intensity = image.red_intensity[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_red_intensity = image.red_intensity[image.veins == True]
+    veins_samples_red_intensity = image.red_intensity[image.veins_skeleton == True]
        
     # extract samples from arteries
-    arteries_samples_green_intensity = image.green_intensity[image.arteries == True]
+    arteries_samples_green_intensity = image.green_intensity[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_green_intensity = image.green_intensity[image.veins == True]
+    veins_samples_green_intensity = image.green_intensity[image.veins_skeleton == True]
     
     # extract samples from arteries
-    arteries_samples_blue_intensity = image.blue_intensity[image.arteries == True]
+    arteries_samples_blue_intensity = image.blue_intensity[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_blue_intensity = image.blue_intensity[image.veins == True]
+    veins_samples_blue_intensity = image.blue_intensity[image.veins_skeleton == True]
     
     # extract samples from arteries
-    arteries_samples_hue = image.hue[image.arteries == True]
+    arteries_samples_hue = image.hue[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_hue = image.hue[image.veins == True]
+    veins_samples_hue = image.hue[image.veins_skeleton == True]
     
     # extract samples from arteries
-    arteries_samples_saturation = image.saturation[image.arteries == True]
+    arteries_samples_saturation = image.saturation[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_saturation = image.saturation[image.veins == True]
+    veins_samples_saturation = image.saturation[image.veins_skeleton == True]
            
     # extract samples from arteries
-    arteries_samples_value = image.value[image.arteries == True]
+    arteries_samples_value = image.value[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_value = image.value[image.veins == True]
+    veins_samples_value = image.value[image.veins_skeleton == True]
     
     
     #mean-large
@@ -232,55 +234,55 @@ for i in range(nr_ims):
     
     #std-large
     # extract samples from arteries
-    arteries_samples_std_red_final = image.std_red_final[image.arteries == True]
+    arteries_samples_std_red_final = image.std_red_final[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_std_red_final = image.std_red_final[image.veins == True]
+    veins_samples_std_red_final = image.std_red_final[image.veins_skeleton == True]
     # extract samples from arteries
-    arteries_samples_std_green_final= image.std_green_final[image.arteries == True]
+    arteries_samples_std_green_final= image.std_green_final[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_std_green_final = image.std_green_final[image.veins == True]    
+    veins_samples_std_green_final = image.std_green_final[image.veins_skeleton == True]    
     # extract samples from arteries
-    arteries_samples_std_blue_final= image.std_blue_final[image.arteries == True]
+    arteries_samples_std_blue_final= image.std_blue_final[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_std_blue_final = image.std_blue_final[image.veins == True]
+    veins_samples_std_blue_final = image.std_blue_final[image.veins_skeleton == True]
     # extract samples from arteries
-    arteries_samples_std_hue_final = image.std_hue_final[image.arteries == True]
+    arteries_samples_std_hue_final = image.std_hue_final[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_std_hue_final = image.std_hue_final[image.veins == True]
+    veins_samples_std_hue_final = image.std_hue_final[image.veins_skeleton == True]
     # extract samples from arteries
-    arteries_samples_std_saturation_final = image.std_saturation_final[image.arteries == True]
+    arteries_samples_std_saturation_final = image.std_saturation_final[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_std_saturation_final = image.std_saturation_final[image.veins == True]
+    veins_samples_std_saturation_final = image.std_saturation_final[image.veins_skeleton == True]
     # extract samples from arteries
-    arteries_samples_std_value_final = image.std_value_final[image.arteries == True]
+    arteries_samples_std_value_final = image.std_value_final[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_std_value_final = image.std_value_final[image.veins == True]
+    veins_samples_std_value_final = image.std_value_final[image.veins_skeleton == True]
     
     #std-small
     # extract samples from arteries
-    arteries_samples_std_red_final_small = image.std_red_final_small[image.arteries == True]
+    arteries_samples_std_red_final_small = image.std_red_final_small[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_std_red_final_small = image.std_red_final_small[image.veins == True]
+    veins_samples_std_red_final_small = image.std_red_final_small[image.veins_skeleton == True]
     # extract samples from arteries
-    arteries_samples_std_green_final_small= image.std_green_final_small[image.arteries == True]
+    arteries_samples_std_green_final_small= image.std_green_final_small[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_std_green_final_small = image.std_green_final_small[image.veins == True]    
+    veins_samples_std_green_final_small = image.std_green_final_small[image.veins_skeleton == True]    
     # extract samples from arteries
-    arteries_samples_std_blue_final_small= image.std_blue_final_small[image.arteries == True]
+    arteries_samples_std_blue_final_small= image.std_blue_final_small[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_std_blue_final_small = image.std_blue_final_small[image.veins == True]
+    veins_samples_std_blue_final_small = image.std_blue_final_small[image.veins_skeleton == True]
     # extract samples from arteries
-    arteries_samples_std_hue_final_small = image.std_hue_final_small[image.arteries == True]
+    arteries_samples_std_hue_final_small = image.std_hue_final_small[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_std_hue_final_small = image.std_hue_final_small[image.veins == True]
+    veins_samples_std_hue_final_small = image.std_hue_final_small[image.veins_skeleton == True]
     # extract samples from arteries
-    arteries_samples_std_saturation_final_small = image.std_saturation_final_small[image.arteries == True]
+    arteries_samples_std_saturation_final_small = image.std_saturation_final_small[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_std_saturation_final_small = image.std_saturation_final_small[image.veins == True]
+    veins_samples_std_saturation_final_small = image.std_saturation_final_small[image.veins_skeleton == True]
     # extract samples from arteries
-    arteries_samples_std_value_final_small = image.std_value_final_small[image.arteries == True]
+    arteries_samples_std_value_final_small = image.std_value_final_small[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_std_value_final_small = image.std_value_final_small[image.veins == True]
+    veins_samples_std_value_final_small = image.std_value_final_small[image.veins_skeleton == True]
     
     
     
@@ -316,72 +318,12 @@ for i in range(nr_ims):
     #extract samples from veins
     veins_samples_line_mean = image.line_mean[image.veins_skeleton == True]
     
-    #Magnitude Gradient
-    # extract samples from arteries
-    arteries_samples_magnitude_gradient = image.magnitude_gradient[image.arteries == True]
+    #Diameter
+     # extract samples from arteries
+    arteries_samples_diameter = image.diameter[image.arteries_skeleton == True]
     # extract samples from veins
-    veins_samples_magnitude_gradient = image.magnitude_gradient[image.veins == True]
-    
-    #    #GLCM Features Large Diameter
-    #    # extract samples from arteries
-    #    arteries_samples_glcm_image_entropy_large = image.glcm_image_entropy_large[image.arteries == True]
-    #    # extract samples from veins
-    #    veins_samples_glcm_image_entropy_large = image.glcm_image_entropy_large[image.veins == True]
-    #    # extract samples from arteries
-    #    arteries_samples_glcm_image_contrast_large = image.glcm_image_contrast_large[image.arteries == True]
-    #    # extract samples from veins
-    #    veins_samples_glcm_image_contrast_large = image.glcm_image_contrast_large[image.veins == True]
-    #    # extract samples from arteries
-    #    arteries_samples_glcm_image_dissimilarity_large = image.glcm_image_dissimilarity_large[image.arteries == True]
-    #    # extract samples from veins
-    #    veins_samples_glcm_image_dissimilarity_large = image.glcm_image_dissimilarity_large[image.veins == True]
-    #    # extract samples from arteries
-    #    arteries_samples_glcm_image_homogeneity_large = image.glcm_image_homogeneity_large[image.arteries == True]
-    #    # extract samples from veins
-    #    veins_samples_glcm_image_homogeneity_large = image.glcm_image_homogeneity_large[image.veins == True]
-    #    # extract samples from arteries
-    #    arteries_samples_glcm_image_energy_large = image.glcm_image_energy_large[image.arteries == True]
-    #    # extract samples from veins
-    #    veins_samples_glcm_image_energy_large = image.glcm_image_energy_large[image.veins == True]
-    #    # extract samples from arteries
-    #    arteries_samples_glcm_image_correlation_large = image.glcm_image_correlation_large[image.arteries == True]
-    #    # extract samples from veins
-    #    veins_samples_glcm_image_correlation_large = image.glcm_image_correlation_large[image.veins == True]
-    #    # extract samples from arteries
-    #    arteries_samples_glcm_image_ASM_large = image.glcm_image_ASM_large[image.arteries == True]
-    #    # extract samples from veins
-    #    veins_samples_glcm_image_ASM_large = image.glcm_image_ASM_large[image.veins == True]
-    
-    #    #GLCM Features Small Diameter
-    #    # extract samples from arteries
-    #    arteries_samples_glcm_image_entropy_small = image.glcm_image_entropy_small[image.arteries == True]
-    #    # extract samples from veins
-    #    veins_samples_glcm_image_entropy_small = image.glcm_image_entropy_small[image.veins == True]
-    #    # extract samples from arteries
-    #    arteries_samples_glcm_image_contrast_small = image.glcm_image_contrast_small[image.arteries == True]
-    #    # extract samples from veins
-    #    veins_samples_glcm_image_contrast_small = image.glcm_image_contrast_small[image.veins == True]
-    #    # extract samples from arteries
-    #    arteries_samples_glcm_image_dissimilarity_small = image.glcm_image_dissimilarity_small[image.arteries == True]
-    #    # extract samples from veins
-    #    veins_samples_glcm_image_dissimilarity_small = image.glcm_image_dissimilarity_small[image.veins == True]
-    #    # extract samples from arteries
-    #    arteries_samples_glcm_image_homogeneity_small = image.glcm_image_homogeneity_small[image.arteries == True]
-    #    # extract samples from veins
-    #    veins_samples_glcm_image_homogeneity_small = image.glcm_image_homogeneity_small[image.veins == True]
-    #    # extract samples from arteries
-    #    arteries_samples_glcm_image_energy_small = image.glcm_image_energy_small[image.arteries == True]
-    #    # extract samples from veins
-    #    veins_samples_glcm_image_energy_small = image.glcm_image_energy_small[image.veins == True]
-    #    # extract samples from arteries
-    #    arteries_samples_glcm_image_correlation_small = image.glcm_image_correlation_small[image.arteries == True]
-    #    # extract samples from veins
-    #    veins_samples_glcm_image_correlation_small = image.glcm_image_correlation_small[image.veins == True]
-    #    # extract samples from arteries
-    #    arteries_samples_glcm_image_ASM_small = image.glcm_image_ASM_small[image.arteries == True]
-    #    # extract samples from veins
-    #    veins_samples_glcm_image_ASM_small = image.glcm_image_ASM_small[image.veins == True]
-    
+    veins_samples_diameter = image.diameter[image.veins_skeleton == True]
+       
     
     # randomly choose which artery examples to use, 1st column for red, 2nd for green, 3rd for blue, 4th for hue, 5th for saturation and 6th for value
     random_sample = np.random.randint(len(arteries_samples_maximum_value_large), size=nr_artery_samples_per_image)
@@ -447,32 +389,8 @@ for i in range(nr_ims):
     X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,57] = arteries_samples_line_skewness[random_sample]
     X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,58] = arteries_samples_line_kurtosis[random_sample]
     X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,59] = arteries_samples_line_mean[random_sample]
-    #We have to save the value of the gradient of each channel.
-    #Compute Maximum of each channel
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,60] = np.amax(arteries_samples_magnitude_gradient[:,0][random_sample])
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,61] = np.amax(arteries_samples_magnitude_gradient[:,1][random_sample])
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,62] = np.amax(arteries_samples_magnitude_gradient[:,2][random_sample])
-    #Compute Minimum of each channel
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,63] = np.amin(arteries_samples_magnitude_gradient[:,0][random_sample])
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,64] = np.amin(arteries_samples_magnitude_gradient[:,1][random_sample])
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,65] = np.amin(arteries_samples_magnitude_gradient[:,2][random_sample])
-    #Compute Mean of each channel
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,66] = np.mean(arteries_samples_magnitude_gradient[:,0][random_sample])
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,67] = np.mean(arteries_samples_magnitude_gradient[:,1][random_sample])
-    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,68] = np.mean(arteries_samples_magnitude_gradient[:,2][random_sample])
-    #    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,61] = arteries_samples_glcm_image_entropy_large[random_sample]
-    #    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,62] = arteries_samples_glcm_image_contrast_large[random_sample]
-    #    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,63] = arteries_samples_glcm_image_dissimilarity_large[random_sample]
-    #    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,64] = arteries_samples_glcm_image_homogeneity_large[random_sample]
-    #    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,65] = arteries_samples_glcm_image_energy_large[random_sample]
-    #    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,66] = arteries_samples_glcm_image_correlation_large[random_sample]
-    #    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,67] = arteries_samples_glcm_image_ASM_large[random_sample]
-    #    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,68] = arteries_samples_glcm_image_contrast_small[random_sample]
-    #    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,69] = arteries_samples_glcm_image_dissimilarity_small[random_sample]
-    #    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,70] = arteries_samples_glcm_image_homogeneity_small[random_sample]
-    #    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,71] = arteries_samples_glcm_image_energy_small[random_sample]
-    #    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,72] = arteries_samples_glcm_image_correlation_small[random_sample]
-    #    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,73] = arteries_samples_glcm_image_ASM_small[random_sample]
+    X[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image,60] = arteries_samples_diameter[random_sample]
+
     # arteries are the negative class
     y[i*nr_samples_per_image:i*nr_samples_per_image+nr_artery_samples_per_image] = np.zeros(nr_artery_samples_per_image,)  
     
@@ -541,32 +459,8 @@ for i in range(nr_ims):
     X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,57] = veins_samples_line_skewness[random_sample]
     X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,58] = veins_samples_line_kurtosis[random_sample]
     X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,59] = veins_samples_line_mean[random_sample]
-    #We have to save the value of the gradient of each channel.
-    #Compute Maximum of each channel
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,60] = np.amax(veins_samples_magnitude_gradient[:,0][random_sample])
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,61] = np.amax(veins_samples_magnitude_gradient[:,1][random_sample])
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,62] = np.amax(veins_samples_magnitude_gradient[:,2][random_sample])
-    #Compute Minimum of each channel
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,63] = np.amin(veins_samples_magnitude_gradient[:,0][random_sample])
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,64] = np.amin(veins_samples_magnitude_gradient[:,1][random_sample])
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,65] = np.amin(veins_samples_magnitude_gradient[:,2][random_sample])
-    #Compute Mean of each channel
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,66] = np.mean(veins_samples_magnitude_gradient[:,0][random_sample])
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,67] = np.mean(veins_samples_magnitude_gradient[:,1][random_sample])
-    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,68] = np.mean(veins_samples_magnitude_gradient[:,2][random_sample])
-    #    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,61] = veins_samples_glcm_image_entropy_large[random_sample]
-    #    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,62] = veins_samples_glcm_image_contrast_large[random_sample]
-    #    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,63] = veins_samples_glcm_image_dissimilarity_large[random_sample]
-    #    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,64] = veins_samples_glcm_image_homogeneity_large[random_sample]
-    #    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,65] = veins_samples_glcm_image_energy_large[random_sample]
-    #    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,66] = veins_samples_glcm_image_correlation_large[random_sample]
-    #    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,67] = veins_samples_glcm_image_ASM_large[random_sample]
-    #    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,68] = veins_samples_glcm_image_contrast_small[random_sample]
-    #    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,69] = veins_samples_glcm_image_dissimilarity_small[random_sample]
-    #    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,70] = veins_samples_glcm_image_homogeneity_small[random_sample]
-    #    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,71] = veins_samples_glcm_image_energy_small[random_sample]
-    #    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,72] = veins_samples_glcm_image_correlation_small[random_sample]
-    #    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,73] = veins_samples_glcm_image_ASM_small[random_sample]    
+    X[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image,60] = veins_samples_diameter[random_sample]
+
     # veins are the positive class
     y[i*nr_samples_per_image+nr_vein_samples_per_image:i*nr_samples_per_image+nr_samples_per_image] = np.ones(nr_vein_samples_per_image,)  
     
