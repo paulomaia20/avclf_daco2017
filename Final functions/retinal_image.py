@@ -110,6 +110,7 @@ def compute_distance_from_image_center(retinal_image):
     #distance transform gives distance from white pixels to black pixels
     distanceFromImageCenter=ndimage.distance_transform_edt(distances_image)
     return distanceFromImageCenter
+
   
 def compute_local_features(retinal_image):
     red_channel=retinal_image.preprocessed_image[:,:,0]
@@ -387,6 +388,11 @@ def compute_local_features(retinal_image):
         print(i, ':',disk_diameter)
     return mean_red_intensity_large, mean_green_intensity_large, mean_blue_intensity_large, mean_hue_large, mean_saturation_large, mean_value_large, mean_red_intensity, mean_green_intensity, mean_blue_intensity, mean_hue, mean_saturation, mean_value, minimum_red_intensity_large, minimum_green_intensity_large, minimum_blue_intensity_large, minimum_hue_large, minimum_saturation_large, minimum_value_large, minimum_red_intensity, minimum_green_intensity, minimum_blue_intensity, minimum_hue, minimum_saturation, minimum_value, maximum_red_intensity_large, maximum_green_intensity_large, maximum_blue_intensity_large, maximum_hue_large, maximum_saturation_large, maximum_value_large, maximum_red_intensity, maximum_green_intensity, maximum_blue_intensity, maximum_hue, maximum_saturation, maximum_value, std_red_final, std_green_final, std_blue_final, std_hue_final, std_saturation_final, std_value_final, std_red_final_small, std_green_final_small, std_blue_final_small, std_hue_final_small, std_saturation_final_small, std_value_final_small
 
+def compute_diameter(retinal_image):
+    distanceTransform=ndimage.distance_transform_edt(retinal_image.vessels)
+    diameter=distanceTransform * retinal_image.skeletonWithoutCrossings
+    return diameter
+    
 def compute_line_features(retinal_image):
     #Temporary variables to save values
     line_mean = np.zeros((retinal_image.preprocessed_image.shape[0], retinal_image.preprocessed_image.shape[1]))
@@ -401,10 +407,6 @@ def compute_line_features(retinal_image):
         y0, x0 = props.centroid
         orientation = props.orientation
         orientations_image[retinal_image.labels==i]=orientation;
-        x1 = x0 + math.cos(orientation) * 0.5 * props.major_axis_length
-        y1 = y0 - math.sin(orientation) * 0.5 * props.major_axis_length
-        x3 = x0 + math.cos(math.pi/2 + orientation)*0.5*props.major_axis_length;
-        y3 = y0 - math.sin(math.pi/2 + orientation) * 0.5 * props.major_axis_length;
         start_x=x0 - math.cos(math.pi/2 + orientation)*0.25*props.major_axis_length;
         start_y=y0 + math.sin(math.pi/2 + orientation) * 0.25 * props.major_axis_length;
         end_x=x0 + math.cos(math.pi/2 + orientation)*0.25*props.major_axis_length;
@@ -547,6 +549,7 @@ class retinal_image:
         self.line_skewness = None
         self.line_kurtosis = None
         self.line_mean = None
+        self.diameter = None
         
     # The retinal_image object knows how to compute these features. 
     # It does that by calling to the functions defined in the previous cells    
@@ -580,3 +583,6 @@ class retinal_image:
     
     def load_compute_line_features(self):
         self.std_image, self.line_skewness, self.line_kurtosis, self.line_mean = compute_line_features(self)
+        
+    def load_Diameter(self):
+        self.diameter=compute_diameter(self)
